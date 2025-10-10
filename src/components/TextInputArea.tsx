@@ -8,7 +8,7 @@ interface TextInputAreaProps {
 
 export function TextInputArea({ value, onChange, isValidLength }: TextInputAreaProps) {
   const characterCount = value.length;
-  const minChars = 1000;
+  const minChars = 100;
   const maxChars = 10000;
 
   const getValidationMessage = () => {

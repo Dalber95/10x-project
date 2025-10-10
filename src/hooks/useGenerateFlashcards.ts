@@ -14,8 +14,8 @@ export function useGenerateFlashcards(): UseGenerateFlashcardsReturn {
 
   const generateFlashcards = async (sourceText: string): Promise<GenerationCreateResponseDto | null> => {
     // Validate text length before API call
-    if (sourceText.length < 1000 || sourceText.length > 10000) {
-      setError("Tekst musi zawierać od 1000 do 10000 znaków");
+    if (sourceText.length < 100 || sourceText.length > 10000) {
+      setError("Tekst musi zawierać od 100 do 10000 znaków");
       return null;
     }
 

@@ -59,7 +59,7 @@ export default function FlashcardGenerationView() {
   }, []);
 
   const isValidTextLength = useMemo(
-    () => textValue.length >= 1000 && textValue.length <= 10000,
+    () => textValue.length >= 100 && textValue.length <= 10000,
     [textValue.length]
   );
 
@@ -68,7 +68,7 @@ export default function FlashcardGenerationView() {
       <header className="mb-8 sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-10 py-4 -mt-4 border-b">
         <h1 className="text-2xl md:text-3xl font-bold mb-2">Generuj fiszki z tekstu</h1>
         <p className="text-sm md:text-base text-muted-foreground">
-          Wklej tekst (1000-10000 znaków), aby wygenerować propozycje fiszek za pomocą AI
+          Wklej tekst (100-10000 znaków), aby wygenerować propozycje fiszek za pomocą AI
         </p>
       </header>
 
