@@ -117,3 +117,16 @@ export type GenerationErrorLogDto = Pick<
   GenerationErrorLog,
   "id" | "error_code" | "error_message" | "model" | "source_text_hash" | "source_text_length" | "created_at" | "user_id"
 >;
+
+// ------------------------------------------------------------------------------------------------
+// 11. Flashcard Proposal ViewModel
+//     Extended model representing the state of a flashcard proposal in the UI.
+//     Allows dynamic setting of the source field when sending data to the /flashcards endpoint.
+// ------------------------------------------------------------------------------------------------
+export interface FlashcardProposalViewModel {
+  front: string;
+  back: string;
+  source: "ai-full" | "ai-edited";
+  accepted: boolean;
+  edited: boolean;
+}
