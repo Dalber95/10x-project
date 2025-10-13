@@ -5,13 +5,16 @@ import type {
   GenerationCreateResponseDto,
 } from "../types";
 import crypto from "crypto";
+import { createOpenRouterService, OpenRouterError } from "./openrouter.service";
+import type { JSONSchema } from "./openrouter.types";
 
 /**
  * Configuration for the generation service
  */
 const GENERATION_CONFIG = {
-  MODEL: "mock-gpt-4", // Model name for development
+  MODEL: "openai/gpt-3.5-turbo", // Model name for production
   TIMEOUT_MS: 60000, // 60 seconds timeout
+  USE_MOCK: import.meta.env.DEV && !import.meta.env.OPENROUTER_API_KEY, // Use mock in dev if no API key
 } as const;
 
 /**
@@ -29,8 +32,49 @@ export class GenerationError extends Error {
 }
 
 /**
+ * JSON schema for flashcard generation response
+ */
+const FLASHCARD_SCHEMA: JSONSchema = {
+  type: "object",
+  properties: {
+    flashcards: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          front: { type: "string" },
+          back: { type: "string" },
+          source: { type: "string", enum: ["ai-full"] },
+        },
+        required: ["front", "back", "source"],
+      },
+    },
+  },
+  required: ["flashcards"],
+};
+
+/**
+ * System message for flashcard generation
+ */
+const SYSTEM_MESSAGE = `You are an AI assistant specialized in creating educational flashcards.
+Generate 3-5 high-quality flashcards based on the provided text.
+
+Guidelines:
+- Create clear, concise questions on the front
+- Provide comprehensive answers on the back
+- Focus on key concepts, facts, and relationships
+- Ensure questions are self-contained and understandable
+- Make answers informative and educational
+- Each flashcard should test a distinct piece of knowledge
+
+Return your response as a JSON object with a "flashcards" array, where each flashcard has:
+- "front": the question (max 200 characters)
+- "back": the answer (max 500 characters)
+- "source": always set to "ai-full"`;
+
+/**
  * Mock AI service that generates flashcard proposals
- * In production, this would call an external AI service like OpenRouter
+ * Used as fallback when OpenRouter API key is not available
  */
 async function mockGenerateFlashcards(
   sourceText: string,
@@ -46,6 +90,53 @@ async function mockGenerateFlashcards(
     back: `Generated Answer ${i + 1} with detailed explanation from the source material`,
     source: "ai-full" as const,
   }));
+}
+
+/**
+ * Generates flashcards using OpenRouter API
+ */
+async function generateFlashcardsWithAI(
+  sourceText: string,
+): Promise<FlashcardProposalDto[]> {
+  try {
+    // Create OpenRouter service instance
+    const openRouter = createOpenRouterService({
+      defaultModel: GENERATION_CONFIG.MODEL,
+      timeout: GENERATION_CONFIG.TIMEOUT_MS,
+      defaultParameters: {
+        temperature: 0.7,
+        top_p: 0.9,
+      },
+    });
+
+    // Configure the service
+    openRouter.setSystemMessage(SYSTEM_MESSAGE);
+    openRouter.setResponseFormat(FLASHCARD_SCHEMA);
+
+    // Generate flashcards
+    const response = await openRouter.sendChatMessage<{
+      flashcards: FlashcardProposalDto[];
+    }>(sourceText);
+
+    if (!response.flashcards || response.flashcards.length === 0) {
+      throw new GenerationError(
+        "AI service returned no flashcard proposals",
+        "EMPTY_RESPONSE",
+      );
+    }
+
+    return response.flashcards;
+  } catch (error) {
+    // Map OpenRouter errors to GenerationError
+    if (error instanceof OpenRouterError) {
+      throw new GenerationError(
+        error.message,
+        error.code,
+        error.statusCode,
+      );
+    }
+    throw error;
+  }
 }
 
 /**
@@ -94,25 +185,10 @@ export async function generateFlashcards(
   const startTime = Date.now();
 
   try {
-    // Step 1: Call AI service with timeout
-    const timeoutPromise = new Promise<never>((_, reject) =>
-      setTimeout(
-        () =>
-          reject(
-            new GenerationError(
-              "AI generation timeout after 60 seconds",
-              "TIMEOUT",
-              504,
-            ),
-          ),
-        GENERATION_CONFIG.TIMEOUT_MS,
-      ),
-    );
-
-    const flashcardsProposals = await Promise.race([
-      mockGenerateFlashcards(sourceText),
-      timeoutPromise,
-    ]);
+    // Step 1: Call AI service (real or mock based on configuration)
+    const flashcardsProposals = GENERATION_CONFIG.USE_MOCK
+      ? await mockGenerateFlashcards(sourceText)
+      : await generateFlashcardsWithAI(sourceText);
 
     if (!flashcardsProposals || flashcardsProposals.length === 0) {
       throw new GenerationError(
