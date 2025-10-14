@@ -93,7 +93,7 @@ const DEFAULT_CONFIG = {
   BASE_URL: 'https://openrouter.ai/api/v1/chat/completions',
   TIMEOUT_MS: 60000,
   MAX_RETRIES: 3,
-  DEFAULT_MODEL: 'openai/gpt-4',
+  DEFAULT_MODEL: 'meta-llama/llama-3.1-8b-instruct',
   DEFAULT_PARAMETERS: {
     temperature: 0.7,
     top_p: 1.0,
@@ -507,28 +507,39 @@ export class OpenRouterService {
   private async handleHttpError(response: Response): Promise<never> {
     const status = response.status;
     let errorMessage = `HTTP ${status}: ${response.statusText}`;
+    let errorDetails = '';
 
     try {
       const errorData = await response.json();
+      console.error('📛 OpenRouter API Error Response:', JSON.stringify(errorData, null, 2));
+      
       if (errorData.error?.message) {
         errorMessage = errorData.error.message;
+      }
+      
+      // Get additional details from metadata if available
+      if (errorData.metadata) {
+        errorDetails = JSON.stringify(errorData.metadata);
       }
     } catch {
       // Failed to parse error response, use default message
     }
 
+    // Include error details in message if available
+    const fullMessage = errorDetails ? `${errorMessage} (Details: ${errorDetails})` : errorMessage;
+
     switch (status) {
       case 401:
-        throw new AuthenticationError(errorMessage);
+        throw new AuthenticationError(fullMessage);
       case 429:
-        throw new RateLimitError(errorMessage);
+        throw new RateLimitError(fullMessage);
       case 422:
-        throw new ValidationError(errorMessage);
+        throw new ValidationError(fullMessage);
       case 503:
       case 504:
-        throw new NetworkError(errorMessage);
+        throw new NetworkError(fullMessage);
       default:
-        throw new OpenRouterError(errorMessage, 'HTTP_ERROR', status);
+        throw new OpenRouterError(fullMessage, 'HTTP_ERROR', status);
     }
   }
 

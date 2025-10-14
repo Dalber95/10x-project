@@ -12,7 +12,7 @@ import type { JSONSchema } from "./openrouter.types";
  * Configuration for the generation service
  */
 const GENERATION_CONFIG = {
-  MODEL: "openai/gpt-3.5-turbo", // Model name for production
+  MODEL: "meta-llama/llama-3.1-8b-instruct", // Llama model via OpenRouter (very cheap, ~$0.0001/request)
   TIMEOUT_MS: 60000, // 60 seconds timeout
   USE_MOCK: import.meta.env.DEV && !import.meta.env.OPENROUTER_API_KEY, // Use mock in dev if no API key
 } as const;
@@ -67,10 +67,16 @@ Guidelines:
 - Make answers informative and educational
 - Each flashcard should test a distinct piece of knowledge
 
-Return your response as a JSON object with a "flashcards" array, where each flashcard has:
-- "front": the question (max 200 characters)
-- "back": the answer (max 500 characters)
-- "source": always set to "ai-full"`;
+IMPORTANT: Return ONLY a valid JSON object with this exact structure (no markdown, no code blocks, no explanation):
+{
+  "flashcards": [
+    {
+      "front": "question text here (max 200 characters)",
+      "back": "answer text here (max 500 characters)",
+      "source": "ai-full"
+    }
+  ]
+}`;
 
 /**
  * Mock AI service that generates flashcard proposals
@@ -117,21 +123,32 @@ async function generateFlashcardsWithAI(
 
     // Configure the service
     openRouter.setSystemMessage(SYSTEM_MESSAGE);
-    openRouter.setResponseFormat(FLASHCARD_SCHEMA);
+    // Don't use setResponseFormat - not all models support it
+    // Instead, we rely on the prompt to request JSON format
 
     // Generate flashcards
-    const response = await openRouter.sendChatMessage<{
-      flashcards: FlashcardProposalDto[];
-    }>(sourceText);
+    const responseText = await openRouter.sendChatMessage<string>(sourceText);
 
-    if (!response.flashcards || response.flashcards.length === 0) {
+    // Parse the response (handle both plain JSON and markdown code blocks)
+    let jsonText = responseText.trim();
+    
+    // Remove markdown code blocks if present
+    if (jsonText.startsWith('```json')) {
+      jsonText = jsonText.replace(/^```json\n/, '').replace(/\n```$/, '');
+    } else if (jsonText.startsWith('```')) {
+      jsonText = jsonText.replace(/^```\n/, '').replace(/\n```$/, '');
+    }
+
+    const parsed = JSON.parse(jsonText) as { flashcards: FlashcardProposalDto[] };
+
+    if (!parsed.flashcards || parsed.flashcards.length === 0) {
       throw new GenerationError(
         "AI service returned no flashcard proposals",
         "EMPTY_RESPONSE",
       );
     }
 
-    return response.flashcards;
+    return parsed.flashcards;
   } catch (error) {
     // Map OpenRouter errors to GenerationError
     if (error instanceof OpenRouterError) {

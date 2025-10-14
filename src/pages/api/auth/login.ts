@@ -29,14 +29,13 @@ export const POST: APIRoute = async ({ request, locals, cookies }) => {
       );
     }
 
-    // Ustaw cookie z sesją
+    // Ustaw cookie z sesją (bez maxAge - sesja wygasa po zamknięciu przeglądarki)
     if (data.session) {
       cookies.set("sb-access-token", data.session.access_token, {
         path: "/",
         httpOnly: true,
         secure: import.meta.env.PROD,
         sameSite: "lax",
-        maxAge: 60 * 60 * 24 * 7, // 7 dni
       });
 
       cookies.set("sb-refresh-token", data.session.refresh_token, {
@@ -44,7 +43,6 @@ export const POST: APIRoute = async ({ request, locals, cookies }) => {
         httpOnly: true,
         secure: import.meta.env.PROD,
         sameSite: "lax",
-        maxAge: 60 * 60 * 24 * 30, // 30 dni
       });
     }
 

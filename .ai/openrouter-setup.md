@@ -22,11 +22,11 @@ Aby używać prawdziwego AI do generowania fiszek, potrzebujesz:
 
 ### Krok 3: Dodaj kredyty (opcjonalnie)
 OpenRouter oferuje:
-- **Free tier**: Niektóre modele są darmowe (np. `google/gemini-flash-1.5`)
+- **Free tier**: Niektóre modele są darmowe (np. `meta-llama/llama-3.2-3b-instruct:free`, `deepseek/deepseek-r1:free`)
 - **Pay-as-you-go**: Płacisz tylko za użycie
 - **Kredyty**: Możesz dodać $5-10 na start
 
-> **Tip**: Dla rozwoju użyj tanich modeli jak `google/gemini-flash-1.5` (~$0.001 za request)
+> **Tip**: Aplikacja domyślnie używa **darmowego modelu** `meta-llama/llama-3.2-3b-instruct:free` - nie musisz dodawać kredytów!
 
 ## ⚙️ Konfiguracja pliku `.env`
 
@@ -158,10 +158,12 @@ Po restarcie, w terminalu powinieneś zobaczyć:
 
 **Rozwiązanie**:
 1. Poczekaj kilka minut
-2. Dodaj kredyty na konto OpenRouter
-3. Użyj tańszego modelu (edytuj `src/lib/generation.service.ts` linijka 15):
+2. Aplikacja już używa darmowego modelu - jeśli nadal występuje problem, spróbuj innego darmowego modelu
+3. Dostępne darmowe modele (edytuj `src/lib/generation.service.ts` linijka 15):
    ```typescript
-   MODEL: "google/gemini-flash-1.5", // Zamiast "openai/gpt-3.5-turbo"
+   MODEL: "meta-llama/llama-3.2-3b-instruct:free", // Domyślny (szybki i skuteczny)
+   MODEL: "deepseek/deepseek-r1:free", // Najnowszy, bardzo mocny
+   MODEL: "google/gemini-flash-1.5-8b:free", // Darmowy od Google
    ```
 
 ### Problem 5: "Insufficient credits"
@@ -169,9 +171,9 @@ Po restarcie, w terminalu powinieneś zobaczyć:
 **Objawy**: Błąd o braku środków
 
 **Rozwiązanie**:
-1. Wejdź na https://openrouter.ai/credits
-2. Dodaj kredyty (min. $1-5)
-3. Lub użyj darmowych modeli (edytuj MODEL w generation.service.ts)
+1. **Aplikacja już używa darmowego modelu** - ten błąd nie powinien wystąpić
+2. Jeśli jednak wystąpi, sprawdź czy model w `generation.service.ts` kończy się na `:free`
+3. Możesz też dodać kredyty na https://openrouter.ai/credits (opcjonalne)
 
 ### Problem 6: Timeout
 
@@ -238,18 +240,19 @@ Sprawdź response z `/api/generations`:
 
 ## 🎯 Rekomendowane modele
 
-### Dla rozwoju (tanie/szybkie):
+### 🆓 Modele darmowe (RECOMMENDED):
 ```typescript
-MODEL: "google/gemini-flash-1.5"
-MODEL: "meta-llama/llama-3.2-3b-instruct:free"
-MODEL: "mistralai/mistral-7b-instruct:free"
+MODEL: "meta-llama/llama-3.2-3b-instruct:free"  // ✅ DOMYŚLNY - szybki i skuteczny
+MODEL: "deepseek/deepseek-r1:free"              // Najnowszy, bardzo mocny
+MODEL: "google/gemini-flash-1.5-8b:free"        // Darmowy od Google
+MODEL: "mistralai/mistral-7b-instruct:free"     // Solidny wybór
 ```
 
-### Dla produkcji (lepsze wyniki):
+### 💰 Modele płatne (dla lepszych wyników):
 ```typescript
-MODEL: "openai/gpt-3.5-turbo"
-MODEL: "openai/gpt-4-turbo"
-MODEL: "anthropic/claude-3-haiku"
+MODEL: "openai/gpt-3.5-turbo"       // ~$0.0005/request
+MODEL: "openai/gpt-4-turbo"         // ~$0.01/request
+MODEL: "anthropic/claude-3-haiku"   // ~$0.00025/request
 ```
 
 ### Zmiana modelu:
@@ -257,7 +260,7 @@ MODEL: "anthropic/claude-3-haiku"
 Edytuj `src/lib/generation.service.ts`:
 ```typescript
 const GENERATION_CONFIG = {
-  MODEL: "google/gemini-flash-1.5", // ← Zmień tutaj
+  MODEL: "meta-llama/llama-3.2-3b-instruct:free", // ← Zmień tutaj
   TIMEOUT_MS: 60000,
   USE_MOCK: import.meta.env.DEV && !import.meta.env.OPENROUTER_API_KEY,
 } as const;
@@ -267,10 +270,10 @@ Zrestartuj dev server.
 
 ## 💡 Wskazówki
 
-1. **Testuj na małych tekstach** (100-300 znaków) aby oszczędzać kredyty
-2. **Monitoruj koszty** na https://openrouter.ai/activity
-3. **Używaj tanich modeli** podczas developmentu
-4. **Zawsze restartuj server** po zmianie `.env`
+1. **Darmowy model**: Aplikacja używa `meta-llama/llama-3.2-3b-instruct:free` - nie potrzebujesz kredytów! 🎉
+2. **Monitoruj użycie** na https://openrouter.ai/activity (dla statystyk)
+3. **Testuj różne modele** - wszystkie oznaczone `:free` są darmowe
+4. **Zawsze restartuj server** po zmianie `.env` lub modelu
 5. **Sprawdzaj logi** w terminalu przy każdym generowaniu
 
 ## 📞 Dalsze wsparcie

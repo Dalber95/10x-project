@@ -15,9 +15,25 @@ export const POST: APIRoute = async ({ locals, cookies }) => {
       );
     }
 
-    // Usuń cookies
+    // Usuń cookies (z różnymi opcjami, aby upewnić się, że są usunięte)
     cookies.delete("sb-access-token", { path: "/" });
     cookies.delete("sb-refresh-token", { path: "/" });
+    
+    // Alternatywnie ustaw je na pusty ciąg z natychmiastowym wygaśnięciem
+    cookies.set("sb-access-token", "", { 
+      path: "/", 
+      maxAge: 0,
+      httpOnly: true,
+      secure: import.meta.env.PROD,
+      sameSite: "lax",
+    });
+    cookies.set("sb-refresh-token", "", { 
+      path: "/", 
+      maxAge: 0,
+      httpOnly: true,
+      secure: import.meta.env.PROD,
+      sameSite: "lax",
+    });
 
     return new Response(
       JSON.stringify({
