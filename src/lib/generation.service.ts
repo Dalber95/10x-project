@@ -98,6 +98,12 @@ async function mockGenerateFlashcards(
 async function generateFlashcardsWithAI(
   sourceText: string,
 ): Promise<FlashcardProposalDto[]> {
+  // Use mock data in development if no API key
+  if (GENERATION_CONFIG.USE_MOCK) {
+    console.log("🎭 Using mock flashcards (no OpenRouter API key found)");
+    return generateMockFlashcards(sourceText);
+  }
+
   try {
     // Create OpenRouter service instance
     const openRouter = createOpenRouterService({
@@ -129,14 +135,40 @@ async function generateFlashcardsWithAI(
   } catch (error) {
     // Map OpenRouter errors to GenerationError
     if (error instanceof OpenRouterError) {
+      console.error('❌ OpenRouter error:', {
+        message: error.message,
+        code: error.code,
+        statusCode: error.statusCode,
+      });
       throw new GenerationError(
         error.message,
         error.code,
         error.statusCode,
       );
     }
+    console.error('❌ Unexpected error in generateFlashcardsWithAI:', error);
     throw error;
   }
+}
+
+/**
+ * Generate mock flashcards for development without API key
+ */
+function generateMockFlashcards(sourceText: string): FlashcardProposalDto[] {
+  const wordCount = sourceText.split(/\s+/).length;
+  const cardCount = Math.min(Math.max(Math.floor(wordCount / 50), 3), 10);
+
+  const mockCards: FlashcardProposalDto[] = [];
+  
+  for (let i = 0; i < cardCount; i++) {
+    mockCards.push({
+      front: `Pytanie ${i + 1} na podstawie tekstu`,
+      back: `Odpowiedź ${i + 1} wygenerowana z fragmentu tekstu. To jest przykładowa fiszka utworzona w trybie deweloperskim bez użycia API OpenRouter.`,
+      source: "ai-full" as const,
+    });
+  }
+
+  return mockCards;
 }
 
 /**

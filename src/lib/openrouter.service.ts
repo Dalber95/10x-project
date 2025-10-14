@@ -208,6 +208,14 @@ export class OpenRouterService {
   constructor(config: OpenRouterServiceConfig = {}) {
     // Validate and set API key
     const apiKey = config.apiKey ?? import.meta.env.OPENROUTER_API_KEY;
+    
+    console.log('🔑 OpenRouter API Key check:', {
+      hasConfigKey: !!config.apiKey,
+      hasEnvKey: !!import.meta.env.OPENROUTER_API_KEY,
+      keyLength: apiKey?.length || 0,
+      keyPrefix: apiKey?.substring(0, 10) + '...',
+    });
+    
     if (!apiKey) {
       throw new AuthenticationError('OpenRouter API key is required');
     }

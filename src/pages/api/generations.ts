@@ -26,7 +26,23 @@ export const POST: APIRoute = async ({ request, locals }) => {
       error: authError,
     } = await locals.supabase.auth.getUser();
 
-    if (authError || !user) {
+    if (authError) {
+      console.error("Authentication error in /api/generations:", authError);
+      return new Response(
+        JSON.stringify({
+          error: "Unauthorized",
+          message: "Authentication failed: " + authError.message,
+          details: authError,
+        }),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json" },
+        },
+      );
+    }
+
+    if (!user) {
+      console.error("No user found in /api/generations");
       return new Response(
         JSON.stringify({
           error: "Unauthorized",
@@ -38,6 +54,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
         },
       );
     }
+
+    console.log("User authenticated in /api/generations:", user.id);
 
     // Step 2: Parse and validate request body
     let requestBody: unknown;

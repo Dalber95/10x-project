@@ -47,7 +47,16 @@ To set up and run the project on your local machine, follow these steps:
     ```sh
     cp .env.example .env
     ```
-    Populate the `.env` file with the necessary API keys and credentials for Supabase and OpenRouter.ai.
+    Populate the `.env` file with the necessary credentials:
+    
+    **Required:**
+    - `SUPABASE_URL` - Your Supabase project URL (from https://app.supabase.com)
+    - `SUPABASE_KEY` - Your Supabase anonymous key (from project settings)
+    
+    **Optional for development:**
+    - `OPENROUTER_API_KEY` - OpenRouter API key (from https://openrouter.ai/keys)
+      
+      > **Note:** If `OPENROUTER_API_KEY` is not provided in development, the app will use mock flashcards instead of actual AI generation. This allows you to test the authentication and UI without needing an API key.
 
 4.  **Run the development server:**
     ```sh

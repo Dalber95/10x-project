@@ -6,6 +6,7 @@ import { FlashcardList } from "./FlashcardList.tsx";
 import { SkeletonLoader } from "./SkeletonLoader.tsx";
 import { ErrorNotification } from "./ErrorNotification.tsx";
 import { BulkSaveButton } from "./BulkSaveButton.tsx";
+import { LogoutButton } from "./LogoutButton.tsx";
 import { useGenerateFlashcards } from "@/hooks/useGenerateFlashcards";
 
 export default function FlashcardGenerationView() {
@@ -66,7 +67,10 @@ export default function FlashcardGenerationView() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
       <header className="mb-8 sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-10 py-4 -mt-4 border-b">
-        <h1 className="text-2xl md:text-3xl font-bold mb-2">Generuj fiszki z tekstu</h1>
+        <div className="flex items-center justify-between mb-2">
+          <h1 className="text-2xl md:text-3xl font-bold">Generuj fiszki z tekstu</h1>
+          <LogoutButton />
+        </div>
         <p className="text-sm md:text-base text-muted-foreground">
           Wklej tekst (100-10000 znaków), aby wygenerować propozycje fiszek za pomocą AI
         </p>
