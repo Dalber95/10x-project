@@ -18,6 +18,7 @@ The project is built with a modern tech stack:
 - **Frontend:** Astro 5, React 19, TypeScript 5, Tailwind CSS 4, Shadcn/ui
 - **Backend:** Supabase (PostgreSQL, Authentication, BaaS SDK)
 - **AI Integration:** OpenRouter.ai for access to various LLM models
+- **Testing:** Vitest and React Testing Library (unit & integration tests), Playwright (E2E tests)
 - **CI/CD & Hosting:** GitHub Actions and DigitalOcean (Docker)
 
 ## Getting Started Locally
@@ -74,6 +75,8 @@ The following scripts are available in the `package.json`:
 -   `npm run lint`: Lints the codebase for errors.
 -   `npm run lint:fix`: Lints the codebase and automatically fixes issues.
 -   `npm run format`: Formats the code using Prettier.
+-   `npm run test`: Runs unit and integration tests.
+-   `npm run test:e2e`: Runs end-to-end tests.
 
 ## Project Scope
 
