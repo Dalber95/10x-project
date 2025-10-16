@@ -16,6 +16,7 @@ export function GenerateButton({ onClick, disabled, isLoading }: GenerateButtonP
       className="w-full md:w-auto"
       aria-label={isLoading ? "Generowanie fiszek w toku" : "Rozpocznij generowanie fiszek"}
       aria-busy={isLoading}
+      data-test-id="generate-flashcards-button"
     >
       {isLoading ? (
         <>

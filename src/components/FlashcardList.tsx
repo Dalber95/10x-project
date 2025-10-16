@@ -25,7 +25,7 @@ export function FlashcardList({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" data-test-id="flashcard-list">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl font-semibold">
           Wygenerowane propozycje ({flashcards.length})

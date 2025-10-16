@@ -77,6 +77,7 @@ export const FlashcardListItem = memo(function FlashcardListItem({
         "transition-all",
         flashcard.accepted && "border-green-500 dark:border-green-700 bg-green-50/50 dark:bg-green-950/20"
       )}
+      data-test-id={`flashcard-item-${index}`}
     >
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
@@ -205,6 +206,7 @@ export const FlashcardListItem = memo(function FlashcardListItem({
                 flashcard.accepted && "border-green-600 text-green-600 hover:bg-green-50 dark:hover:bg-green-950"
               )}
               aria-label={flashcard.accepted ? `Odznacz fiszkę ${index + 1}` : `Zaakceptuj fiszkę ${index + 1}`}
+              data-test-id={`flashcard-accept-button-${index}`}
             >
               <Check />
               {flashcard.accepted ? "Zaakceptowana" : "Zaakceptuj"}
@@ -214,6 +216,7 @@ export const FlashcardListItem = memo(function FlashcardListItem({
               size="sm"
               onClick={handleEditClick}
               aria-label={`Edytuj fiszkę ${index + 1}`}
+              data-test-id={`flashcard-edit-button-${index}`}
             >
               <Edit2 />
               Edytuj
@@ -223,6 +226,7 @@ export const FlashcardListItem = memo(function FlashcardListItem({
               size="sm"
               onClick={() => onReject(index)}
               aria-label={`Odrzuć fiszkę ${index + 1}`}
+              data-test-id={`flashcard-reject-button-${index}`}
             >
               <X />
               Odrzuć

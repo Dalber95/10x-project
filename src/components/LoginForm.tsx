@@ -113,6 +113,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
                 aria-describedby={emailError ? "email-error" : undefined}
                 disabled={isLoading}
                 autoComplete="email"
+                data-test-id="login-email-input"
               />
             </div>
             {emailError && (
@@ -151,6 +152,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
                 aria-describedby={passwordError ? "password-error" : undefined}
                 disabled={isLoading}
                 autoComplete="current-password"
+                data-test-id="login-password-input"
               />
             </div>
             {passwordError && (
@@ -166,6 +168,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
             size="lg"
             disabled={isLoading || !isFormValid}
             aria-busy={isLoading}
+            data-test-id="login-submit-button"
           >
             {isLoading ? (
               <>

@@ -49,6 +49,7 @@ export function TextInputArea({ value, onChange, isValidLength }: TextInputAreaP
         )}
         aria-describedby="character-count"
         aria-invalid={characterCount > maxChars}
+        data-test-id="source-text-input"
       />
       <p id="character-count" className={validationMessageClass}>
         {getValidationMessage()}

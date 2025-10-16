@@ -94,6 +94,7 @@ export function BulkSaveButton({
             disabled={isLoading || !hasFlashcards}
             aria-label={`Zapisz wszystkie ${flashcards.length} fiszek do bazy danych`}
             aria-busy={isLoading}
+            data-test-id="save-all-flashcards-button"
           >
             {isLoading ? (
               <>
@@ -115,6 +116,7 @@ export function BulkSaveButton({
             disabled={isLoading || !hasAcceptedFlashcards}
             aria-label={`Zapisz ${acceptedFlashcards.length} zaakceptowanych fiszek do bazy danych`}
             aria-busy={isLoading}
+            data-test-id="save-accepted-flashcards-button"
           >
             {isLoading ? (
               <>
