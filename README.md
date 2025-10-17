@@ -83,9 +83,12 @@ The following scripts are available in the `package.json`:
 ### Key Features
 
 -   **AI-Powered Flashcard Generation:** Automatically create flashcard suggestions from user-provided text.
--   **Manual Flashcard Management:** Manually create, edit, and delete flashcards.
--   **User Authentication:** Secure user registration and login.
--   **Spaced Repetition:** Integration with a spaced repetition algorithm for effective learning.
+-   **Flashcard Management:** 
+    -   View all saved flashcards in a paginated list
+    -   Edit existing flashcards (front and back)
+    -   Delete flashcards with confirmation
+    -   Track flashcard source (AI-generated, AI-edited, or manual)
+-   **User Authentication:** Secure user registration and login with password recovery.
 -   **Secure Data Storage:** User and flashcard data stored securely using Supabase.
 
 ### Out of Scope (MVP)

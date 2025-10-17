@@ -71,6 +71,56 @@ export const flashcardsCreateCommandSchema = z.object({
 });
 
 /**
+ * Validation schema for flashcard update
+ * All fields are optional (partial update)
+ */
+export const flashcardUpdateDtoSchema = z
+  .object({
+    front: z
+      .string()
+      .min(1, "Front must not be empty")
+      .max(200, "Front must not exceed 200 characters")
+      .optional(),
+    back: z
+      .string()
+      .min(1, "Back must not be empty")
+      .max(500, "Back must not exceed 500 characters")
+      .optional(),
+    source: z
+      .enum(["ai-full", "ai-edited", "manual"], {
+        errorMap: () => ({
+          message: 'Source must be one of: "ai-full", "ai-edited", "manual"',
+        }),
+      })
+      .optional(),
+    generation_id: z.number().nullable().optional(),
+  })
+  .refine(
+    (data) => {
+      // If source is being updated to "ai-full" or "ai-edited", generation_id should be provided and not null
+      if (
+        data.source &&
+        (data.source === "ai-full" || data.source === "ai-edited")
+      ) {
+        // If generation_id is explicitly set in the update, it must not be null
+        if (data.generation_id !== undefined && data.generation_id === null) {
+          return false;
+        }
+      }
+      // If source is being updated to "manual", generation_id should be null
+      if (data.source === "manual" && data.generation_id !== undefined) {
+        return data.generation_id === null;
+      }
+      return true;
+    },
+    {
+      message:
+        'generation_id should be a number for "ai-full" and "ai-edited" sources, and null for "manual" source',
+      path: ["generation_id"],
+    },
+  );
+
+/**
  * Type inference from the schemas
  */
 export type FlashcardCreateDtoSchema = z.infer<
@@ -78,4 +128,7 @@ export type FlashcardCreateDtoSchema = z.infer<
 >;
 export type FlashcardsCreateCommandSchema = z.infer<
   typeof flashcardsCreateCommandSchema
+>;
+export type FlashcardUpdateDtoSchema = z.infer<
+  typeof flashcardUpdateDtoSchema
 >;

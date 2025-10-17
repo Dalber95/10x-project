@@ -1,0 +1,37 @@
+---
+import { LogoutButton } from "./LogoutButton";
+
+const currentPath = Astro.url.pathname;
+
+const isActive = (path: string) => {
+  return currentPath === path ? "bg-accent" : "";
+};
+---
+
+<nav class="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+  <div class="container mx-auto px-4 py-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-6">
+        <a href="/generate" class="text-xl font-bold">
+          Flashcard Generator
+        </a>
+        <div class="flex items-center gap-2">
+          <a
+            href="/generate"
+            class={`px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent ${isActive("/generate")}`}
+          >
+            Generuj fiszki
+          </a>
+          <a
+            href="/flashcards"
+            class={`px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent ${isActive("/flashcards")}`}
+          >
+            Moje fiszki
+          </a>
+        </div>
+      </div>
+      <LogoutButton client:load />
+    </div>
+  </div>
+</nav>
+
