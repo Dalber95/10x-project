@@ -89,6 +89,7 @@ The following scripts are available in the `package.json`:
     -   Delete flashcards with confirmation
     -   Track flashcard source (AI-generated, AI-edited, or manual)
 -   **User Authentication:** Secure user registration and login with password recovery.
+-   **Theme Support:** Light and dark mode with automatic detection of system preferences.
 -   **Secure Data Storage:** User and flashcard data stored securely using Supabase.
 
 ### Out of Scope (MVP)

@@ -74,7 +74,15 @@ Podczas edycji system sprawdza:
 W górnej części aplikacji znajduje się menu z opcjami:
 - **Generuj fiszki** - tworzenie nowych fiszek z tekstu
 - **Moje fiszki** - przeglądanie i zarządzanie zapisanymi fiszkami
+- **Przełącznik motywu** - przełączanie między trybem jasnym i ciemnym
 - **Wyloguj** - zakończenie sesji
+
+### Motyw jasny/ciemny
+Aplikacja obsługuje tryb jasny i ciemny:
+- 🌙 Kliknij ikonę **księżyca** aby przełączyć na tryb ciemny
+- ☀️ Kliknij ikonę **słońca** aby przełączyć na tryb jasny
+- Twój wybór jest zapisywany w przeglądarce
+- Przy pierwszym odwiedzeniu aplikacja wykryje ustawienia systemowe
 
 ### Integracja z generatorem
 - Po wygenerowaniu i zapisaniu fiszek możesz je później znaleźć w sekcji **"Moje fiszki"**

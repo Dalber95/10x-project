@@ -1,5 +1,6 @@
 ---
 import { LogoutButton } from "./LogoutButton";
+import { ThemeToggle } from "./ThemeToggle";
 
 const currentPath = Astro.url.pathname;
 
@@ -30,7 +31,10 @@ const isActive = (path: string) => {
           </a>
         </div>
       </div>
-      <LogoutButton client:load />
+      <div class="flex items-center gap-2">
+        <ThemeToggle client:load />
+        <LogoutButton client:load />
+      </div>
     </div>
   </div>
 </nav>
