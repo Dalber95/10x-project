@@ -1,5 +1,5 @@
-import { Page, Locator } from '@playwright/test';
-import { FlashcardItem } from './components/FlashcardItem';
+import { Page, Locator } from "@playwright/test";
+import { FlashcardItem } from "./components/FlashcardItem";
 
 /**
  * Page Object Model for the Flashcard Generation Page
@@ -22,21 +22,21 @@ export class GeneratePage {
     this.page = page;
     // Using accessible selectors - more reliable with Astro + React hydration
     this.sourceTextInput = page.getByLabel(/tekst źródłowy/i);
-    this.generateButton = page.getByRole('button', { name: /rozpocznij generowanie fiszek/i });
+    this.generateButton = page.getByRole("button", { name: /rozpocznij generowanie fiszek/i });
     this.flashcardsList = page.locator('[data-test-id="flashcard-list"]'); // Use data-test-id only for uniqueness
-    this.saveAllButton = page.getByRole('button', { name: /zapisz wszystkie.*fiszek do bazy danych/i });
-    this.saveAcceptedButton = page.getByRole('button', { name: /zapisz.*zaakceptowanych fiszek do bazy danych/i });
-    this.logoutButton = page.getByRole('button', { name: /wyloguj/i });
-    this.characterCount = page.locator('#character-count');
-    this.errorNotification = page.getByRole('alert');
-    this.skeletonLoader = page.locator('.animate-pulse').first();
+    this.saveAllButton = page.getByRole("button", { name: /zapisz wszystkie.*fiszek do bazy danych/i });
+    this.saveAcceptedButton = page.getByRole("button", { name: /zapisz.*zaakceptowanych fiszek do bazy danych/i });
+    this.logoutButton = page.getByRole("button", { name: /wyloguj/i });
+    this.characterCount = page.locator("#character-count");
+    this.errorNotification = page.getByRole("alert");
+    this.skeletonLoader = page.locator(".animate-pulse").first();
   }
 
   /**
    * Navigate to generate page
    */
   async goto() {
-    await this.page.goto('/generate');
+    await this.page.goto("/generate");
   }
 
   /**
@@ -69,14 +69,14 @@ export class GeneratePage {
    * Wait for flashcards to be generated and displayed
    */
   async waitForFlashcards() {
-    await this.flashcardsList.waitFor({ state: 'visible' });
+    await this.flashcardsList.waitFor({ state: "visible" });
   }
 
   /**
    * Wait for generation to complete (skeleton loader disappears)
    */
   async waitForGenerationComplete() {
-    await this.skeletonLoader.waitFor({ state: 'hidden', timeout: 60000 });
+    await this.skeletonLoader.waitFor({ state: "hidden", timeout: 60000 });
   }
 
   /**
@@ -145,7 +145,7 @@ export class GeneratePage {
    * Get character count text
    */
   async getCharacterCount(): Promise<string> {
-    return await this.characterCount.textContent() || '';
+    return (await this.characterCount.textContent()) || "";
   }
 
   /**
@@ -159,24 +159,22 @@ export class GeneratePage {
    * Get error message
    */
   async getErrorMessage(): Promise<string> {
-    return await this.errorNotification.textContent() || '';
+    return (await this.errorNotification.textContent()) || "";
   }
 
   /**
    * Wait for successful save (flashcards list disappears)
    */
   async waitForSuccessfulSave() {
-    await this.flashcardsList.waitFor({ state: 'hidden' });
+    await this.flashcardsList.waitFor({ state: "hidden" });
   }
 
   /**
    * Wait for toast notification
    */
   async waitForToast(text?: string) {
-    const toast = text 
-      ? this.page.getByRole('status').filter({ hasText: text })
-      : this.page.getByRole('status');
-    await toast.waitFor({ state: 'visible' });
+    const toast = text ? this.page.getByRole("status").filter({ hasText: text }) : this.page.getByRole("status");
+    await toast.waitFor({ state: "visible" });
   }
 
   /**
@@ -218,4 +216,3 @@ export class GeneratePage {
     }
   }
 }
-

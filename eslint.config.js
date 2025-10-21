@@ -58,6 +58,9 @@ const reactConfig = tseslint.config({
 
 export default tseslint.config(
   includeIgnoreFile(gitignorePath),
+  {
+    ignores: ["**/database.types.ts", "e2e/check-env.js", "**/*.d.ts", "**/e2e/**/*.js", "**/Layout.astro"],
+  },
   baseConfig,
   jsxA11yConfig,
   reactConfig,

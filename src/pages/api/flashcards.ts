@@ -1,11 +1,7 @@
 // src/pages/api/flashcards.ts
 import type { APIRoute } from "astro";
 import { flashcardsCreateCommandSchema } from "../../lib/schemas";
-import {
-  createFlashcards,
-  getFlashcards,
-  FlashcardError,
-} from "../../lib/flashcard.service";
+import { createFlashcards, getFlashcards, FlashcardError } from "../../lib/flashcard.service";
 
 /**
  * POST /api/flashcards
@@ -35,7 +31,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         {
           status: 401,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -43,7 +39,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     let requestBody: unknown;
     try {
       requestBody = await request.json();
-    } catch (error) {
+    } catch {
       return new Response(
         JSON.stringify({
           error: "Invalid JSON",
@@ -52,13 +48,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
     // Step 3: Validate against schema
-    const validationResult =
-      flashcardsCreateCommandSchema.safeParse(requestBody);
+    const validationResult = flashcardsCreateCommandSchema.safeParse(requestBody);
 
     if (!validationResult.success) {
       const errors = validationResult.error.errors.map((err) => ({
@@ -75,18 +70,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
     const { flashcards } = validationResult.data;
 
     // Step 4: Create flashcards using the service
-    const createdFlashcards = await createFlashcards(
-      locals.supabase,
-      user.id,
-      flashcards,
-    );
+    const createdFlashcards = await createFlashcards(locals.supabase, user.id, flashcards);
 
     // Step 5: Return successful response
     return new Response(
@@ -96,7 +87,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       {
         status: 201,
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
   } catch (error) {
     // Handle known flashcard errors
@@ -109,7 +100,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         {
           status: error.statusCode,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -124,7 +115,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       {
         status: 500,
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
   }
 };
@@ -157,7 +148,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
         {
           status: 401,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -179,7 +170,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -192,7 +183,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -215,7 +206,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
         {
           status: error.statusCode,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -230,8 +221,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
       {
         status: 500,
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
   }
 };
-

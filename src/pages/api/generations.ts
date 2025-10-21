@@ -1,10 +1,7 @@
 // src/pages/api/generations.ts
 import type { APIRoute } from "astro";
 import { generateFlashcardsCommandSchema } from "../../lib/schemas";
-import {
-  generateFlashcards,
-  GenerationError,
-} from "../../lib/generation.service";
+import { generateFlashcards, GenerationError } from "../../lib/generation.service";
 import type { GenerationCreateResponseDto } from "../../types";
 
 /**
@@ -37,7 +34,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         {
           status: 401,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -51,7 +48,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         {
           status: 401,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -61,7 +58,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     let requestBody: unknown;
     try {
       requestBody = await request.json();
-    } catch (error) {
+    } catch {
       return new Response(
         JSON.stringify({
           error: "Invalid JSON",
@@ -70,13 +67,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
     // Step 3: Validate against schema
-    const validationResult =
-      generateFlashcardsCommandSchema.safeParse(requestBody);
+    const validationResult = generateFlashcardsCommandSchema.safeParse(requestBody);
 
     if (!validationResult.success) {
       const errors = validationResult.error.errors.map((err) => ({
@@ -93,18 +89,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
     const { source_text } = validationResult.data;
 
     // Step 4: Generate flashcards using the service
-    const result: GenerationCreateResponseDto = await generateFlashcards(
-      locals.supabase,
-      user.id,
-      source_text,
-    );
+    const result: GenerationCreateResponseDto = await generateFlashcards(locals.supabase, user.id, source_text);
 
     // Step 5: Return successful response
     return new Response(JSON.stringify(result), {
@@ -122,7 +114,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         {
           status: error.statusCode,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -137,8 +129,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       {
         status: 500,
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
   }
 };
-

@@ -1,12 +1,9 @@
 // src/lib/generation.service.ts
 import type { SupabaseClient } from "../db/supabase.client";
-import type {
-  FlashcardProposalDto,
-  GenerationCreateResponseDto,
-} from "../types";
+import type { FlashcardProposalDto, GenerationCreateResponseDto } from "../types";
 import crypto from "crypto";
 import { createOpenRouterService, OpenRouterError } from "./openrouter.service";
-import type { JSONSchema } from "./openrouter.types";
+// import type { JSONSchema } from "./openrouter.types";
 
 /**
  * Configuration for the generation service
@@ -24,7 +21,7 @@ export class GenerationError extends Error {
   constructor(
     message: string,
     public code: string,
-    public statusCode: number = 500,
+    public statusCode = 500
   ) {
     super(message);
     this.name = "GenerationError";
@@ -33,8 +30,10 @@ export class GenerationError extends Error {
 
 /**
  * JSON schema for flashcard generation response
+ * @deprecated Currently not used, kept for future reference
  */
-const FLASHCARD_SCHEMA: JSONSchema = {
+/*
+const _FLASHCARD_SCHEMA: JSONSchema = {
   type: "object",
   properties: {
     flashcards: {
@@ -52,6 +51,7 @@ const FLASHCARD_SCHEMA: JSONSchema = {
   },
   required: ["flashcards"],
 };
+*/
 
 /**
  * System message for flashcard generation
@@ -82,9 +82,7 @@ IMPORTANT: Return ONLY a valid JSON object with this exact structure (no markdow
  * Mock AI service that generates flashcard proposals
  * Used as fallback when OpenRouter API key is not available
  */
-async function mockGenerateFlashcards(
-  sourceText: string,
-): Promise<FlashcardProposalDto[]> {
+async function mockGenerateFlashcards(sourceText: string): Promise<FlashcardProposalDto[]> {
   // Simulate API call delay
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -101,9 +99,7 @@ async function mockGenerateFlashcards(
 /**
  * Generates flashcards using OpenRouter API
  */
-async function generateFlashcardsWithAI(
-  sourceText: string,
-): Promise<FlashcardProposalDto[]> {
+async function generateFlashcardsWithAI(sourceText: string): Promise<FlashcardProposalDto[]> {
   // Use mock data in development if no API key
   if (GENERATION_CONFIG.USE_MOCK) {
     console.log("🎭 Using mock flashcards (no OpenRouter API key found)");
@@ -131,39 +127,32 @@ async function generateFlashcardsWithAI(
 
     // Parse the response (handle both plain JSON and markdown code blocks)
     let jsonText = responseText.trim();
-    
+
     // Remove markdown code blocks if present
-    if (jsonText.startsWith('```json')) {
-      jsonText = jsonText.replace(/^```json\n/, '').replace(/\n```$/, '');
-    } else if (jsonText.startsWith('```')) {
-      jsonText = jsonText.replace(/^```\n/, '').replace(/\n```$/, '');
+    if (jsonText.startsWith("```json")) {
+      jsonText = jsonText.replace(/^```json\n/, "").replace(/\n```$/, "");
+    } else if (jsonText.startsWith("```")) {
+      jsonText = jsonText.replace(/^```\n/, "").replace(/\n```$/, "");
     }
 
     const parsed = JSON.parse(jsonText) as { flashcards: FlashcardProposalDto[] };
 
     if (!parsed.flashcards || parsed.flashcards.length === 0) {
-      throw new GenerationError(
-        "AI service returned no flashcard proposals",
-        "EMPTY_RESPONSE",
-      );
+      throw new GenerationError("AI service returned no flashcard proposals", "EMPTY_RESPONSE");
     }
 
     return parsed.flashcards;
   } catch (error) {
     // Map OpenRouter errors to GenerationError
     if (error instanceof OpenRouterError) {
-      console.error('❌ OpenRouter error:', {
+      console.error("❌ OpenRouter error:", {
         message: error.message,
         code: error.code,
         statusCode: error.statusCode,
       });
-      throw new GenerationError(
-        error.message,
-        error.code,
-        error.statusCode,
-      );
+      throw new GenerationError(error.message, error.code, error.statusCode);
     }
-    console.error('❌ Unexpected error in generateFlashcardsWithAI:', error);
+    console.error("❌ Unexpected error in generateFlashcardsWithAI:", error);
     throw error;
   }
 }
@@ -176,7 +165,7 @@ function generateMockFlashcards(sourceText: string): FlashcardProposalDto[] {
   const cardCount = Math.min(Math.max(Math.floor(wordCount / 50), 3), 10);
 
   const mockCards: FlashcardProposalDto[] = [];
-  
+
   for (let i = 0; i < cardCount; i++) {
     mockCards.push({
       front: `Pytanie ${i + 1} na podstawie tekstu`,
@@ -203,7 +192,7 @@ async function logGenerationError(
   userId: string,
   sourceText: string,
   errorCode: string,
-  errorMessage: string,
+  errorMessage: string
 ): Promise<void> {
   const sourceTextHash = hashSourceText(sourceText);
   const sourceTextLength = sourceText.length;
@@ -229,7 +218,7 @@ async function logGenerationError(
 export async function generateFlashcards(
   supabase: SupabaseClient,
   userId: string,
-  sourceText: string,
+  sourceText: string
 ): Promise<GenerationCreateResponseDto> {
   const startTime = Date.now();
 
@@ -240,10 +229,7 @@ export async function generateFlashcards(
       : await generateFlashcardsWithAI(sourceText);
 
     if (!flashcardsProposals || flashcardsProposals.length === 0) {
-      throw new GenerationError(
-        "AI service returned no flashcard proposals",
-        "EMPTY_RESPONSE",
-      );
+      throw new GenerationError("AI service returned no flashcard proposals", "EMPTY_RESPONSE");
     }
 
     // Step 2: Calculate generation metadata
@@ -267,10 +253,7 @@ export async function generateFlashcards(
       .single();
 
     if (generationError || !generationData) {
-      throw new GenerationError(
-        "Failed to save generation metadata",
-        "DATABASE_ERROR",
-      );
+      throw new GenerationError("Failed to save generation metadata", "DATABASE_ERROR");
     }
 
     // Step 4: Return response
@@ -281,28 +264,16 @@ export async function generateFlashcards(
     };
   } catch (error) {
     // Log error to database
-    const errorCode =
-      error instanceof GenerationError ? error.code : "UNKNOWN_ERROR";
-    const errorMessage =
-      error instanceof Error ? error.message : "Unknown error occurred";
+    const errorCode = error instanceof GenerationError ? error.code : "UNKNOWN_ERROR";
+    const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
 
-    await logGenerationError(
-      supabase,
-      userId,
-      sourceText,
-      errorCode,
-      errorMessage,
-    );
+    await logGenerationError(supabase, userId, sourceText, errorCode, errorMessage);
 
     // Re-throw the error for the endpoint to handle
     if (error instanceof GenerationError) {
       throw error;
     }
 
-    throw new GenerationError(
-      "An unexpected error occurred during generation",
-      "UNKNOWN_ERROR",
-    );
+    throw new GenerationError("An unexpected error occurred during generation", "UNKNOWN_ERROR");
   }
 }
-

@@ -18,51 +18,52 @@ export function PasswordRecoveryForm({ onSubmit }: PasswordRecoveryFormProps) {
   const [touched, setTouched] = useState(false);
 
   // Validation logic
-  const emailError = touched && email.length > 0 && !isValidEmail(email)
-    ? "Nieprawidłowy format adresu email"
-    : null;
+  const emailError = touched && email.length > 0 && !isValidEmail(email) ? "Nieprawidłowy format adresu email" : null;
 
   const isFormValid = isValidEmail(email);
 
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    setTouched(true);
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-    if (!isFormValid) {
-      return;
-    }
+      setTouched(true);
 
-    setError(null);
-    setSuccess(false);
-    setIsLoading(true);
-
-    try {
-      if (onSubmit) {
-        await onSubmit({ email });
-      } else {
-        // Default behavior - call API endpoint
-        const response = await fetch("/api/auth/forgot-password", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email }),
-        });
-
-        if (!response.ok) {
-          const data = await response.json();
-          throw new Error(data.message || "Błąd podczas wysyłania linku resetującego");
-        }
+      if (!isFormValid) {
+        return;
       }
 
-      setSuccess(true);
-      setEmail("");
-      setTouched(false);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Wystąpił nieoczekiwany błąd");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [email, isFormValid, onSubmit]);
+      setError(null);
+      setSuccess(false);
+      setIsLoading(true);
+
+      try {
+        if (onSubmit) {
+          await onSubmit({ email });
+        } else {
+          // Default behavior - call API endpoint
+          const response = await fetch("/api/auth/forgot-password", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+          });
+
+          if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.message || "Błąd podczas wysyłania linku resetującego");
+          }
+        }
+
+        setSuccess(true);
+        setEmail("");
+        setTouched(false);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Wystąpił nieoczekiwany błąd");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [email, isFormValid, onSubmit]
+  );
 
   const handleBlur = () => {
     setTouched(true);
@@ -72,11 +73,9 @@ export function PasswordRecoveryForm({ onSubmit }: PasswordRecoveryFormProps) {
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle className="text-2xl">Odzyskiwanie hasła</CardTitle>
-        <CardDescription>
-          Wprowadź swój adres email, a wyślemy Ci link do resetowania hasła
-        </CardDescription>
+        <CardDescription>Wprowadź swój adres email, a wyślemy Ci link do resetowania hasła</CardDescription>
       </CardHeader>
-      
+
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
@@ -96,8 +95,8 @@ export function PasswordRecoveryForm({ onSubmit }: PasswordRecoveryFormProps) {
           )}
 
           <div className="space-y-2">
-            <label 
-              htmlFor="email" 
+            <label
+              htmlFor="email"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               Adres email
@@ -125,13 +124,7 @@ export function PasswordRecoveryForm({ onSubmit }: PasswordRecoveryFormProps) {
             )}
           </div>
 
-          <Button
-            type="submit"
-            className="w-full"
-            size="lg"
-            disabled={isLoading || !isFormValid}
-            aria-busy={isLoading}
-          >
+          <Button type="submit" className="w-full" size="lg" disabled={isLoading || !isFormValid} aria-busy={isLoading}>
             {isLoading ? (
               <>
                 <Loader2 className="animate-spin" />
@@ -146,10 +139,7 @@ export function PasswordRecoveryForm({ onSubmit }: PasswordRecoveryFormProps) {
 
       <CardFooter className="flex-col space-y-2">
         <div className="text-sm text-muted-foreground text-center">
-          <a 
-            href="/login" 
-            className="text-primary hover:underline font-medium inline-flex items-center gap-1"
-          >
+          <a href="/login" className="text-primary hover:underline font-medium inline-flex items-center gap-1">
             <ArrowLeft className="h-3 w-3" />
             Wróć do logowania
           </a>
@@ -163,4 +153,3 @@ function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
-

@@ -8,20 +8,14 @@ interface ErrorNotificationProps {
   onClose?: () => void;
 }
 
-export function ErrorNotification({
-  message,
-  title = "Wystąpił błąd",
-  onClose,
-}: ErrorNotificationProps) {
+export function ErrorNotification({ message, title = "Wystąpił błąd", onClose }: ErrorNotificationProps) {
   if (!message) return null;
 
   return (
     <Alert variant="destructive" className="relative">
       <AlertCircle className="h-4 w-4" />
       <AlertTitle>{title}</AlertTitle>
-      <AlertDescription className="mt-2">
-        {message}
-      </AlertDescription>
+      <AlertDescription className="mt-2">{message}</AlertDescription>
       {onClose && (
         <Button
           variant="ghost"
@@ -36,4 +30,3 @@ export function ErrorNotification({
     </Alert>
   );
 }
-

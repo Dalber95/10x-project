@@ -9,9 +9,7 @@ export function ThemeToggle() {
     setMounted(true);
     // Check for saved theme preference or default to light
     const savedTheme = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
     if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
       setTheme("dark");
@@ -38,11 +36,7 @@ export function ThemeToggle() {
   // Prevent hydration mismatch by not rendering until mounted
   if (!mounted) {
     return (
-      <button
-        className="p-2 rounded-md hover:bg-accent transition-colors"
-        aria-label="Toggle theme"
-        disabled
-      >
+      <button className="p-2 rounded-md hover:bg-accent transition-colors" aria-label="Toggle theme" disabled>
         <div className="w-5 h-5" />
       </button>
     );
@@ -63,4 +57,3 @@ export function ThemeToggle() {
     </button>
   );
 }
-

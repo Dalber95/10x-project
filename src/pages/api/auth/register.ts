@@ -21,9 +21,8 @@ export const POST: APIRoute = async ({ request, locals, cookies }) => {
     if (error) {
       return new Response(
         JSON.stringify({
-          message: error.message === "User already registered"
-            ? "Email już istnieje w systemie"
-            : "Błąd podczas rejestracji",
+          message:
+            error.message === "User already registered" ? "Email już istnieje w systemie" : "Błąd podczas rejestracji",
         }),
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
@@ -75,4 +74,3 @@ export const POST: APIRoute = async ({ request, locals, cookies }) => {
     );
   }
 };
-

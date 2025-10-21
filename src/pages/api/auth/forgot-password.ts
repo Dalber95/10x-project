@@ -12,12 +12,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const body = await request.json();
     const validatedData = ForgotPasswordSchema.parse(body);
 
-    const { error } = await locals.supabase.auth.resetPasswordForEmail(
-      validatedData.email,
-      {
-        redirectTo: `${new URL(request.url).origin}/reset-password`,
-      }
-    );
+    const { error } = await locals.supabase.auth.resetPasswordForEmail(validatedData.email, {
+      redirectTo: `${new URL(request.url).origin}/reset-password`,
+    });
 
     if (error) {
       // Dla bezpieczeństwa, zawsze zwracamy sukces, nawet jeśli email nie istnieje
@@ -50,4 +47,3 @@ export const POST: APIRoute = async ({ request, locals }) => {
     );
   }
 };
-

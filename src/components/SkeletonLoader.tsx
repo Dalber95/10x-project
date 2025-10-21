@@ -9,10 +9,7 @@ export function SkeletonLoader() {
       </div>
 
       {[1, 2, 3, 4, 5].map((index) => (
-        <div
-          key={index}
-          className="border rounded-lg p-6 space-y-4 bg-card"
-        >
+        <div key={index} className="border rounded-lg p-6 space-y-4 bg-card">
           <div className="space-y-2">
             <Skeleton className="h-4 w-16" />
             <Skeleton className="h-20 w-full" />
@@ -35,4 +32,3 @@ export function SkeletonLoader() {
     </div>
   );
 }
-

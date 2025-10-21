@@ -1,12 +1,7 @@
 // src/pages/api/flashcards/[id].ts
 import type { APIRoute } from "astro";
 import { flashcardUpdateDtoSchema } from "../../../lib/schemas";
-import {
-  getFlashcardById,
-  updateFlashcard,
-  deleteFlashcard,
-  FlashcardError,
-} from "../../../lib/flashcard.service";
+import { getFlashcardById, updateFlashcard, deleteFlashcard, FlashcardError } from "../../../lib/flashcard.service";
 
 /**
  * GET /api/flashcards/:id
@@ -36,7 +31,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
         {
           status: 401,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -52,16 +47,12 @@ export const GET: APIRoute = async ({ params, locals }) => {
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
     // Step 3: Fetch flashcard using the service
-    const flashcard = await getFlashcardById(
-      locals.supabase,
-      user.id,
-      flashcardId,
-    );
+    const flashcard = await getFlashcardById(locals.supabase, user.id, flashcardId);
 
     // Step 4: Return successful response
     return new Response(JSON.stringify(flashcard), {
@@ -79,7 +70,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
         {
           status: error.statusCode,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -94,7 +85,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
       {
         status: 500,
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
   }
 };
@@ -129,7 +120,7 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
         {
           status: 401,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -145,7 +136,7 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -153,7 +144,7 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
     let requestBody: unknown;
     try {
       requestBody = await request.json();
-    } catch (error) {
+    } catch {
       return new Response(
         JSON.stringify({
           error: "Invalid JSON",
@@ -162,7 +153,7 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -184,17 +175,12 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
     // Step 5: Update flashcard using the service
-    const updatedFlashcard = await updateFlashcard(
-      locals.supabase,
-      user.id,
-      flashcardId,
-      validationResult.data,
-    );
+    const updatedFlashcard = await updateFlashcard(locals.supabase, user.id, flashcardId, validationResult.data);
 
     // Step 6: Return successful response
     return new Response(JSON.stringify(updatedFlashcard), {
@@ -212,7 +198,7 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
         {
           status: error.statusCode,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -227,7 +213,7 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
       {
         status: 500,
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
   }
 };
@@ -260,7 +246,7 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
         {
           status: 401,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -276,7 +262,7 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
         {
           status: 400,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -298,7 +284,7 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
         {
           status: error.statusCode,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
     }
 
@@ -313,8 +299,7 @@ export const DELETE: APIRoute = async ({ params, locals }) => {
       {
         status: 500,
         headers: { "Content-Type": "application/json" },
-      },
+      }
     );
   }
 };
-

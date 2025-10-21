@@ -35,10 +35,7 @@ export function useDeleteFlashcard(): UseDeleteFlashcardReturn {
         }
 
         if (response.status === 500) {
-          throw new Error(
-            errorData.message ||
-              "Wystąpił błąd podczas usuwania fiszki. Spróbuj ponownie.",
-          );
+          throw new Error(errorData.message || "Wystąpił błąd podczas usuwania fiszki. Spróbuj ponownie.");
         }
 
         throw new Error("Wystąpił nieoczekiwany błąd");
@@ -46,8 +43,7 @@ export function useDeleteFlashcard(): UseDeleteFlashcardReturn {
 
       return true;
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Wystąpił nieznany błąd";
+      const errorMessage = err instanceof Error ? err.message : "Wystąpił nieznany błąd";
       setError(errorMessage);
       return false;
     } finally {
@@ -66,4 +62,3 @@ export function useDeleteFlashcard(): UseDeleteFlashcardReturn {
     clearError,
   };
 }
-

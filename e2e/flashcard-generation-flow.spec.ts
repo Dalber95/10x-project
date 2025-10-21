@@ -1,14 +1,14 @@
-import { test, expect } from '@playwright/test';
-import { LoginPage } from './pages/LoginPage';
-import { GeneratePage } from './pages/GeneratePage';
-import { TestConfig } from './helpers/test-config';
-import { cleanupTestUser } from './helpers/test-teardown';
+import { test, expect } from "@playwright/test";
+import { LoginPage } from "./pages/LoginPage";
+import { GeneratePage } from "./pages/GeneratePage";
+import { TestConfig } from "./helpers/test-config";
+import { cleanupTestUser } from "./helpers/test-teardown";
 
 /**
  * E2E Test Suite: Flashcard Generation Flow
  * Tests the complete user journey from login to saving flashcards
  * Following Playwright best practices with Page Object Model
- * 
+ *
  * Note: Test cleans up its test data in afterEach hook
  */
 
@@ -33,7 +33,7 @@ sztucznej inteligencji (AI), które ulepszają automatyzację, wykonując zadani
 fizyczne bez interwencji człowieka.
 `.trim();
 
-test.describe('Flashcard Generation Flow', () => {
+test.describe("Flashcard Generation Flow", () => {
   let loginPage: LoginPage;
   let generatePage: GeneratePage;
 
@@ -49,37 +49,37 @@ test.describe('Flashcard Generation Flow', () => {
     }
   });
 
-  test('should complete full flow: login, generate, and save all flashcards', async ({ page }) => {
+  test("should complete full flow: login, generate, and save all flashcards", async ({ page }) => {
     // 1. Navigate to login page
     await loginPage.goto();
-    
+
     // 2. Login with valid credentials from test config
     await loginPage.login(TestConfig.user.email, TestConfig.user.password);
-    
+
     // 3. Verify successful login (redirect to /generate)
     await loginPage.waitForSuccessfulLogin();
-    expect(page.url()).toContain('/generate');
-    
+    expect(page.url()).toContain("/generate");
+
     // 4. Enter source text (minimum 1000 characters for backend validation)
     await generatePage.fillSourceText(SOURCE_TEXT);
-    
+
     // 5. Click generate flashcards (button will be enabled after text is filled)
     await generatePage.clickGenerate();
-    
+
     // 6. Wait for generation to complete
     await generatePage.waitForGenerationComplete();
     await generatePage.waitForFlashcards();
-    
+
     // 7. Verify flashcards were generated
     const flashcardCount = await generatePage.getFlashcardCount();
     expect(flashcardCount).toBeGreaterThan(0);
-    
+
     // 8. Save all flashcards
     await generatePage.clickSaveAll();
-    
+
     // 9. Wait for flashcards list to be cleared (indicates successful save)
     await generatePage.waitForSuccessfulSave();
-    
+
     // 10. Verify flashcards list is not visible
     expect(await generatePage.flashcardsList.isVisible()).toBe(false);
   });

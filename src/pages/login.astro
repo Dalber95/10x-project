@@ -6,16 +6,15 @@ export const prerender = false;
 ---
 
 <Layout title="Logowanie - 10x Astro Starter">
-  <div class="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-background via-background to-muted/20">
+  <div
+    class="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-background via-background to-muted/20"
+  >
     <div class="w-full">
       <div class="text-center mb-8">
         <h1 class="text-3xl md:text-4xl font-bold mb-2">10xCards</h1>
-        <p class="text-muted-foreground">
-          Witaj ponownie! Zaloguj się, aby kontynuować
-        </p>
+        <p class="text-muted-foreground">Witaj ponownie! Zaloguj się, aby kontynuować</p>
       </div>
       <LoginForm client:load />
     </div>
   </div>
 </Layout>
-

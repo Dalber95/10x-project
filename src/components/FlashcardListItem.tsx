@@ -82,9 +82,7 @@ export const FlashcardListItem = memo(function FlashcardListItem({
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-muted-foreground">
-              Fiszka #{index + 1}
-            </span>
+            <span className="text-sm font-medium text-muted-foreground">Fiszka #{index + 1}</span>
             {flashcard.edited && (
               <Badge variant="secondary" className="text-xs">
                 Edytowana
@@ -102,10 +100,7 @@ export const FlashcardListItem = memo(function FlashcardListItem({
 
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <label
-            htmlFor={`front-${index}`}
-            className="text-sm font-medium leading-none"
-          >
+          <label htmlFor={`front-${index}`} className="text-sm font-medium leading-none">
             Przód fiszki
           </label>
           {isEditing ? (
@@ -124,22 +119,15 @@ export const FlashcardListItem = memo(function FlashcardListItem({
                   {validationErrors.front}
                 </p>
               )}
-              <p className="text-xs text-muted-foreground">
-                {editedFront.length} / 200 znaków
-              </p>
+              <p className="text-xs text-muted-foreground">{editedFront.length} / 200 znaków</p>
             </>
           ) : (
-            <div className="p-3 rounded-md bg-muted text-sm min-h-[60px] whitespace-pre-wrap">
-              {flashcard.front}
-            </div>
+            <div className="p-3 rounded-md bg-muted text-sm min-h-[60px] whitespace-pre-wrap">{flashcard.front}</div>
           )}
         </div>
 
         <div className="space-y-2">
-          <label
-            htmlFor={`back-${index}`}
-            className="text-sm font-medium leading-none"
-          >
+          <label htmlFor={`back-${index}`} className="text-sm font-medium leading-none">
             Tył fiszki
           </label>
           {isEditing ? (
@@ -162,14 +150,10 @@ export const FlashcardListItem = memo(function FlashcardListItem({
                   {validationErrors.back}
                 </p>
               )}
-              <p className="text-xs text-muted-foreground">
-                {editedBack.length} / 500 znaków
-              </p>
+              <p className="text-xs text-muted-foreground">{editedBack.length} / 500 znaków</p>
             </>
           ) : (
-            <div className="p-3 rounded-md bg-muted text-sm min-h-[100px] whitespace-pre-wrap">
-              {flashcard.back}
-            </div>
+            <div className="p-3 rounded-md bg-muted text-sm min-h-[100px] whitespace-pre-wrap">{flashcard.back}</div>
           )}
         </div>
       </CardContent>
@@ -237,4 +221,3 @@ export const FlashcardListItem = memo(function FlashcardListItem({
     </Card>
   );
 });
-

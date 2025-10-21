@@ -25,7 +25,7 @@ export interface ModelParameters {
 /**
  * Message role types supported by the chat API
  */
-export type MessageRole = 'system' | 'user' | 'assistant';
+export type MessageRole = "system" | "user" | "assistant";
 
 /**
  * Chat message structure
@@ -54,7 +54,7 @@ export interface JSONSchema {
  * Response format configuration for structured outputs
  */
 export interface ResponseFormat {
-  type: 'json_object';
+  type: "json_object";
   schema?: JSONSchema;
 }
 
@@ -81,13 +81,13 @@ export interface RequestPayload {
 export interface ApiResponse {
   id: string;
   model: string;
-  choices: Array<{
+  choices: {
     message: {
       role: string;
       content: string;
     };
     finish_reason: string;
-  }>;
+  }[];
   usage?: {
     prompt_tokens: number;
     completion_tokens: number;
@@ -110,4 +110,3 @@ export interface OpenRouterServiceConfig {
   defaultModel?: string;
   defaultParameters?: ModelParameters;
 }
-

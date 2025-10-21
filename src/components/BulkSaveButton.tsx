@@ -11,11 +11,7 @@ interface BulkSaveButtonProps {
   onSaveSuccess: () => void;
 }
 
-export function BulkSaveButton({
-  flashcards,
-  generationId,
-  onSaveSuccess,
-}: BulkSaveButtonProps) {
+export function BulkSaveButton({ flashcards, generationId, onSaveSuccess }: BulkSaveButtonProps) {
   const { saveFlashcards, isLoading, error, clearError } = useSaveFlashcards();
 
   const acceptedFlashcards = flashcards.filter((f) => f.accepted);
@@ -81,9 +77,7 @@ export function BulkSaveButton({
       <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
         <div className="space-y-1">
           <h3 className="font-semibold text-lg">Zapisz fiszki do bazy danych</h3>
-          <p className="text-sm text-muted-foreground">
-            Wybierz, które fiszki chcesz zachować
-          </p>
+          <p className="text-sm text-muted-foreground">Wybierz, które fiszki chcesz zachować</p>
         </div>
 
         <div className="flex gap-2 flex-col sm:flex-row">
@@ -144,4 +138,3 @@ export function BulkSaveButton({
     </div>
   );
 }
-

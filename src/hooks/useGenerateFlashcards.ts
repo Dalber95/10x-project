@@ -37,11 +37,11 @@ export function useGenerateFlashcards(): UseGenerateFlashcardsReturn {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        
+
         if (response.status === 401) {
           throw new Error("Musisz być zalogowany, aby generować fiszki");
         }
-        
+
         if (response.status === 400) {
           const validationMessage = errorData.details
             ? errorData.details.map((d: { field: string; message: string }) => d.message).join(", ")
@@ -78,4 +78,3 @@ export function useGenerateFlashcards(): UseGenerateFlashcardsReturn {
     clearError,
   };
 }
-
