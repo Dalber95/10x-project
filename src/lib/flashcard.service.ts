@@ -9,7 +9,7 @@ export class FlashcardError extends Error {
   constructor(
     message: string,
     public code: string,
-    public statusCode: number = 500,
+    public statusCode = 500
   ) {
     super(message);
     this.name = "FlashcardError";
@@ -22,7 +22,7 @@ export class FlashcardError extends Error {
 async function verifyGenerationOwnership(
   supabase: SupabaseClient,
   userId: string,
-  generationId: number,
+  generationId: number
 ): Promise<boolean> {
   const { data, error } = await supabase
     .from("generations")
@@ -51,17 +51,13 @@ async function verifyGenerationOwnership(
 export async function createFlashcards(
   supabase: SupabaseClient,
   userId: string,
-  flashcardsData: FlashcardCreateDto[],
+  flashcardsData: FlashcardCreateDto[]
 ): Promise<FlashcardDto[]> {
   // Step 1: Validate generation_id ownership for AI-generated flashcards
   const generationIds = new Set(
     flashcardsData
-      .filter(
-        (fc) =>
-          fc.generation_id !== null &&
-          (fc.source === "ai-full" || fc.source === "ai-edited"),
-      )
-      .map((fc) => fc.generation_id as number),
+      .filter((fc) => fc.generation_id !== null && (fc.source === "ai-full" || fc.source === "ai-edited"))
+      .map((fc) => fc.generation_id as number)
   );
 
   // Verify each unique generation_id belongs to the user
@@ -71,7 +67,7 @@ export async function createFlashcards(
       throw new FlashcardError(
         `Generation with id ${genId} not found or does not belong to the user`,
         "INVALID_GENERATION_ID",
-        400,
+        400
       );
     }
   }
@@ -89,25 +85,15 @@ export async function createFlashcards(
   const { data, error } = await supabase
     .from("flashcards")
     .insert(flashcardsToInsert)
-    .select(
-      "id, front, back, source, generation_id, created_at, updated_at",
-    );
+    .select("id, front, back, source, generation_id, created_at, updated_at");
 
   if (error) {
     console.error("Database error while creating flashcards:", error);
-    throw new FlashcardError(
-      "Failed to create flashcards in database",
-      "DATABASE_ERROR",
-      500,
-    );
+    throw new FlashcardError("Failed to create flashcards in database", "DATABASE_ERROR", 500);
   }
 
   if (!data || data.length === 0) {
-    throw new FlashcardError(
-      "No flashcards were created",
-      "CREATION_FAILED",
-      500,
-    );
+    throw new FlashcardError("No flashcards were created", "CREATION_FAILED", 500);
   }
 
   // Step 4: Return created flashcards as DTOs
@@ -127,8 +113,8 @@ export async function createFlashcards(
 export async function getFlashcards(
   supabase: SupabaseClient,
   userId: string,
-  page: number = 1,
-  limit: number = 20,
+  page = 1,
+  limit = 20
 ): Promise<FlashcardsListResponseDto> {
   // Calculate offset for pagination
   const offset = (page - 1) * limit;
@@ -141,11 +127,7 @@ export async function getFlashcards(
 
   if (countError) {
     console.error("Database error while counting flashcards:", countError);
-    throw new FlashcardError(
-      "Failed to count flashcards",
-      "DATABASE_ERROR",
-      500,
-    );
+    throw new FlashcardError("Failed to count flashcards", "DATABASE_ERROR", 500);
   }
 
   const total = count ?? 0;
@@ -160,11 +142,7 @@ export async function getFlashcards(
 
   if (error) {
     console.error("Database error while fetching flashcards:", error);
-    throw new FlashcardError(
-      "Failed to fetch flashcards from database",
-      "DATABASE_ERROR",
-      500,
-    );
+    throw new FlashcardError("Failed to fetch flashcards from database", "DATABASE_ERROR", 500);
   }
 
   return {
@@ -189,7 +167,7 @@ export async function getFlashcards(
 export async function getFlashcardById(
   supabase: SupabaseClient,
   userId: string,
-  flashcardId: number,
+  flashcardId: number
 ): Promise<FlashcardDto> {
   const { data, error } = await supabase
     .from("flashcards")
@@ -199,11 +177,7 @@ export async function getFlashcardById(
     .single();
 
   if (error || !data) {
-    throw new FlashcardError(
-      "Flashcard not found or does not belong to the user",
-      "FLASHCARD_NOT_FOUND",
-      404,
-    );
+    throw new FlashcardError("Flashcard not found or does not belong to the user", "FLASHCARD_NOT_FOUND", 404);
   }
 
   return data as FlashcardDto;
@@ -223,7 +197,7 @@ export async function updateFlashcard(
   supabase: SupabaseClient,
   userId: string,
   flashcardId: number,
-  updateData: FlashcardUpdateDto,
+  updateData: FlashcardUpdateDto
 ): Promise<FlashcardDto> {
   // First verify the flashcard exists and belongs to the user
   await getFlashcardById(supabase, userId, flashcardId);
@@ -235,16 +209,12 @@ export async function updateFlashcard(
     updateData.source &&
     (updateData.source === "ai-full" || updateData.source === "ai-edited")
   ) {
-    const isValid = await verifyGenerationOwnership(
-      supabase,
-      userId,
-      updateData.generation_id,
-    );
+    const isValid = await verifyGenerationOwnership(supabase, userId, updateData.generation_id);
     if (!isValid) {
       throw new FlashcardError(
         `Generation with id ${updateData.generation_id} not found or does not belong to the user`,
         "INVALID_GENERATION_ID",
-        400,
+        400
       );
     }
   }
@@ -260,11 +230,7 @@ export async function updateFlashcard(
 
   if (error || !data) {
     console.error("Database error while updating flashcard:", error);
-    throw new FlashcardError(
-      "Failed to update flashcard",
-      "DATABASE_ERROR",
-      500,
-    );
+    throw new FlashcardError("Failed to update flashcard", "DATABASE_ERROR", 500);
   }
 
   return data as FlashcardDto;
@@ -278,28 +244,15 @@ export async function updateFlashcard(
  * @param flashcardId - ID of the flashcard to delete
  * @throws FlashcardError if flashcard not found or database operation fails
  */
-export async function deleteFlashcard(
-  supabase: SupabaseClient,
-  userId: string,
-  flashcardId: number,
-): Promise<void> {
+export async function deleteFlashcard(supabase: SupabaseClient, userId: string, flashcardId: number): Promise<void> {
   // First verify the flashcard exists and belongs to the user
   await getFlashcardById(supabase, userId, flashcardId);
 
   // Perform the deletion
-  const { error } = await supabase
-    .from("flashcards")
-    .delete()
-    .eq("id", flashcardId)
-    .eq("user_id", userId);
+  const { error } = await supabase.from("flashcards").delete().eq("id", flashcardId).eq("user_id", userId);
 
   if (error) {
     console.error("Database error while deleting flashcard:", error);
-    throw new FlashcardError(
-      "Failed to delete flashcard",
-      "DATABASE_ERROR",
-      500,
-    );
+    throw new FlashcardError("Failed to delete flashcard", "DATABASE_ERROR", 500);
   }
 }
-

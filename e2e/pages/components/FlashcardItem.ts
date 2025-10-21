@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator } from "@playwright/test";
 
 /**
  * Page Object Model for a single Flashcard Item component
@@ -24,30 +24,30 @@ export class FlashcardItem {
   constructor(page: Page, index: number) {
     this.page = page;
     this.index = index;
-    
+
     // Container
     this.container = page.getByTestId(`flashcard-item-${index}`);
-    
+
     // Action buttons (in non-edit mode)
     this.acceptButton = page.getByTestId(`flashcard-accept-button-${index}`);
     this.editButton = page.getByTestId(`flashcard-edit-button-${index}`);
     this.rejectButton = page.getByTestId(`flashcard-reject-button-${index}`);
-    
+
     // Edit mode buttons
-    this.saveButton = this.container.getByRole('button', { name: /zapisz/i });
-    this.cancelButton = this.container.getByRole('button', { name: /anuluj/i });
-    
+    this.saveButton = this.container.getByRole("button", { name: /zapisz/i });
+    this.cancelButton = this.container.getByRole("button", { name: /anuluj/i });
+
     // Fields in view mode
-    this.frontField = this.container.locator('#front-' + index).locator('..');
-    this.backField = this.container.locator('#back-' + index).locator('..');
-    
+    this.frontField = this.container.locator("#front-" + index).locator("..");
+    this.backField = this.container.locator("#back-" + index).locator("..");
+
     // Input fields in edit mode
     this.frontInput = this.container.locator(`#front-${index}`);
     this.backInput = this.container.locator(`#back-${index}`);
-    
+
     // Badges
-    this.acceptedBadge = this.container.getByText('Zaakceptowana');
-    this.editedBadge = this.container.getByText('Edytowana');
+    this.acceptedBadge = this.container.getByText("Zaakceptowana");
+    this.editedBadge = this.container.getByText("Edytowana");
   }
 
   /**
@@ -99,14 +99,14 @@ export class FlashcardItem {
    * Get front content text
    */
   async getFrontText(): Promise<string> {
-    return await this.frontField.textContent() || '';
+    return (await this.frontField.textContent()) || "";
   }
 
   /**
    * Get back content text
    */
   async getBackText(): Promise<string> {
-    return await this.backField.textContent() || '';
+    return (await this.backField.textContent()) || "";
   }
 
   /**
@@ -141,14 +141,14 @@ export class FlashcardItem {
    * Wait for flashcard to be visible
    */
   async waitForVisible() {
-    await this.container.waitFor({ state: 'visible' });
+    await this.container.waitFor({ state: "visible" });
   }
 
   /**
    * Wait for flashcard to be hidden (after rejection)
    */
   async waitForHidden() {
-    await this.container.waitFor({ state: 'hidden' });
+    await this.container.waitFor({ state: "hidden" });
   }
 
   /**
@@ -158,4 +158,3 @@ export class FlashcardItem {
     return this.index + 1;
   }
 }
-

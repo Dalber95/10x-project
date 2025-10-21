@@ -32,4 +32,3 @@ export function GenerateButton({ onClick, disabled, isLoading }: GenerateButtonP
     </Button>
   );
 }
-

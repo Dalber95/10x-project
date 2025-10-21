@@ -22,60 +22,61 @@ export function ResetPasswordForm({ onSubmit }: ResetPasswordFormProps) {
   });
 
   // Validation logic
-  const passwordError = touched.password && password.length > 0 && password.length < 8
-    ? "Hasło musi mieć co najmniej 8 znaków"
-    : null;
+  const passwordError =
+    touched.password && password.length > 0 && password.length < 8 ? "Hasło musi mieć co najmniej 8 znaków" : null;
 
-  const confirmPasswordError = touched.confirmPassword && confirmPassword.length > 0 && password !== confirmPassword
-    ? "Hasła nie są zgodne"
-    : null;
+  const confirmPasswordError =
+    touched.confirmPassword && confirmPassword.length > 0 && password !== confirmPassword
+      ? "Hasła nie są zgodne"
+      : null;
 
-  const isFormValid = 
-    password.length >= 8 && 
-    password === confirmPassword;
+  const isFormValid = password.length >= 8 && password === confirmPassword;
 
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Mark all fields as touched
-    setTouched({ password: true, confirmPassword: true });
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-    if (!isFormValid) {
-      return;
-    }
+      // Mark all fields as touched
+      setTouched({ password: true, confirmPassword: true });
 
-    setError(null);
-    setSuccess(false);
-    setIsLoading(true);
-
-    try {
-      if (onSubmit) {
-        await onSubmit({ password });
-      } else {
-        // Default behavior - call API endpoint
-        const response = await fetch("/api/auth/reset-password", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ password }),
-        });
-
-        if (!response.ok) {
-          const data = await response.json();
-          throw new Error(data.message || "Błąd podczas resetowania hasła");
-        }
+      if (!isFormValid) {
+        return;
       }
 
-      setSuccess(true);
-      // Redirect to login after success
-      setTimeout(() => {
-        window.location.href = "/login";
-      }, 3000);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Wystąpił nieoczekiwany błąd");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [password, confirmPassword, isFormValid, onSubmit]);
+      setError(null);
+      setSuccess(false);
+      setIsLoading(true);
+
+      try {
+        if (onSubmit) {
+          await onSubmit({ password });
+        } else {
+          // Default behavior - call API endpoint
+          const response = await fetch("/api/auth/reset-password", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ password }),
+          });
+
+          if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.message || "Błąd podczas resetowania hasła");
+          }
+        }
+
+        setSuccess(true);
+        // Redirect to login after success
+        setTimeout(() => {
+          window.location.href = "/login";
+        }, 3000);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Wystąpił nieoczekiwany błąd");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [password, confirmPassword, isFormValid, onSubmit]
+  );
 
   const handleBlur = (field: keyof typeof touched) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
@@ -85,11 +86,9 @@ export function ResetPasswordForm({ onSubmit }: ResetPasswordFormProps) {
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle className="text-2xl">Resetowanie hasła</CardTitle>
-        <CardDescription>
-          Wprowadź nowe hasło dla swojego konta
-        </CardDescription>
+        <CardDescription>Wprowadź nowe hasło dla swojego konta</CardDescription>
       </CardHeader>
-      
+
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
@@ -109,8 +108,8 @@ export function ResetPasswordForm({ onSubmit }: ResetPasswordFormProps) {
           )}
 
           <div className="space-y-2">
-            <label 
-              htmlFor="password" 
+            <label
+              htmlFor="password"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               Nowe hasło
@@ -143,8 +142,8 @@ export function ResetPasswordForm({ onSubmit }: ResetPasswordFormProps) {
           </div>
 
           <div className="space-y-2">
-            <label 
-              htmlFor="confirm-password" 
+            <label
+              htmlFor="confirm-password"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               Potwierdź nowe hasło
@@ -202,10 +201,7 @@ export function ResetPasswordForm({ onSubmit }: ResetPasswordFormProps) {
       <CardFooter className="flex-col space-y-2">
         <div className="text-sm text-muted-foreground text-center">
           Pamiętasz hasło?{" "}
-          <a 
-            href="/login" 
-            className="text-primary hover:underline font-medium"
-          >
+          <a href="/login" className="text-primary hover:underline font-medium">
             Zaloguj się
           </a>
         </div>
@@ -213,4 +209,3 @@ export function ResetPasswordForm({ onSubmit }: ResetPasswordFormProps) {
     </Card>
   );
 }
-

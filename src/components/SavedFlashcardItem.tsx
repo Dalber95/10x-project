@@ -1,10 +1,5 @@
 import { useState, memo } from "react";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -77,11 +72,7 @@ export const SavedFlashcardItem = memo(function SavedFlashcardItem({
   };
 
   const handleDeleteClick = async () => {
-    if (
-      window.confirm(
-        "Czy na pewno chcesz usunąć tę fiszkę? Ta operacja jest nieodwracalna.",
-      )
-    ) {
+    if (window.confirm("Czy na pewno chcesz usunąć tę fiszkę? Ta operacja jest nieodwracalna.")) {
       await onDelete(flashcard.id);
     }
   };
@@ -123,30 +114,20 @@ export const SavedFlashcardItem = memo(function SavedFlashcardItem({
   };
 
   return (
-    <Card
-      className="transition-all"
-      data-test-id={`saved-flashcard-item-${flashcard.id}`}
-    >
+    <Card className="transition-all" data-test-id={`saved-flashcard-item-${flashcard.id}`}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-muted-foreground">
-              Fiszka #{flashcard.id}
-            </span>
+            <span className="text-sm font-medium text-muted-foreground">Fiszka #{flashcard.id}</span>
             {getSourceBadge()}
           </div>
-          <span className="text-xs text-muted-foreground">
-            {formatDate(flashcard.created_at)}
-          </span>
+          <span className="text-xs text-muted-foreground">{formatDate(flashcard.created_at)}</span>
         </div>
       </CardHeader>
 
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <label
-            htmlFor={`front-${flashcard.id}`}
-            className="text-sm font-medium leading-none"
-          >
+          <label htmlFor={`front-${flashcard.id}`} className="text-sm font-medium leading-none">
             Przód fiszki
           </label>
           {isEditing ? (
@@ -158,37 +139,23 @@ export const SavedFlashcardItem = memo(function SavedFlashcardItem({
                 placeholder="Pytanie lub termin..."
                 className={cn(validationErrors.front && "border-destructive")}
                 aria-invalid={!!validationErrors.front}
-                aria-describedby={
-                  validationErrors.front
-                    ? `front-error-${flashcard.id}`
-                    : undefined
-                }
+                aria-describedby={validationErrors.front ? `front-error-${flashcard.id}` : undefined}
                 disabled={isUpdating}
               />
               {validationErrors.front && (
-                <p
-                  id={`front-error-${flashcard.id}`}
-                  className="text-sm text-destructive"
-                >
+                <p id={`front-error-${flashcard.id}`} className="text-sm text-destructive">
                   {validationErrors.front}
                 </p>
               )}
-              <p className="text-xs text-muted-foreground">
-                {editedFront.length} / 200 znaków
-              </p>
+              <p className="text-xs text-muted-foreground">{editedFront.length} / 200 znaków</p>
             </>
           ) : (
-            <div className="p-3 rounded-md bg-muted text-sm min-h-[60px] whitespace-pre-wrap">
-              {flashcard.front}
-            </div>
+            <div className="p-3 rounded-md bg-muted text-sm min-h-[60px] whitespace-pre-wrap">{flashcard.front}</div>
           )}
         </div>
 
         <div className="space-y-2">
-          <label
-            htmlFor={`back-${flashcard.id}`}
-            className="text-sm font-medium leading-none"
-          >
+          <label htmlFor={`back-${flashcard.id}`} className="text-sm font-medium leading-none">
             Tył fiszki
           </label>
           {isEditing ? (
@@ -201,30 +168,21 @@ export const SavedFlashcardItem = memo(function SavedFlashcardItem({
                 rows={4}
                 className={cn(
                   "flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-                  validationErrors.back && "border-destructive",
+                  validationErrors.back && "border-destructive"
                 )}
                 aria-invalid={!!validationErrors.back}
-                aria-describedby={
-                  validationErrors.back ? `back-error-${flashcard.id}` : undefined
-                }
+                aria-describedby={validationErrors.back ? `back-error-${flashcard.id}` : undefined}
                 disabled={isUpdating}
               />
               {validationErrors.back && (
-                <p
-                  id={`back-error-${flashcard.id}`}
-                  className="text-sm text-destructive"
-                >
+                <p id={`back-error-${flashcard.id}`} className="text-sm text-destructive">
                   {validationErrors.back}
                 </p>
               )}
-              <p className="text-xs text-muted-foreground">
-                {editedBack.length} / 500 znaków
-              </p>
+              <p className="text-xs text-muted-foreground">{editedBack.length} / 500 znaków</p>
             </>
           ) : (
-            <div className="p-3 rounded-md bg-muted text-sm min-h-[100px] whitespace-pre-wrap">
-              {flashcard.back}
-            </div>
+            <div className="p-3 rounded-md bg-muted text-sm min-h-[100px] whitespace-pre-wrap">{flashcard.back}</div>
           )}
         </div>
       </CardContent>
@@ -284,4 +242,3 @@ export const SavedFlashcardItem = memo(function SavedFlashcardItem({
     </Card>
   );
 });
-

@@ -21,54 +21,54 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
   });
 
   // Validation logic
-  const emailError = touched.email && email.length > 0 && !isValidEmail(email)
-    ? "Nieprawidłowy format adresu email"
-    : null;
+  const emailError =
+    touched.email && email.length > 0 && !isValidEmail(email) ? "Nieprawidłowy format adresu email" : null;
 
-  const passwordError = touched.password && password.length > 0 && password.length < 1
-    ? "Hasło jest wymagane"
-    : null;
+  const passwordError = touched.password && password.length > 0 && password.length < 1 ? "Hasło jest wymagane" : null;
 
   const isFormValid = isValidEmail(email) && password.length > 0;
 
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Mark all fields as touched
-    setTouched({ email: true, password: true });
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-    if (!isFormValid) {
-      return;
-    }
+      // Mark all fields as touched
+      setTouched({ email: true, password: true });
 
-    setError(null);
-    setIsLoading(true);
-
-    try {
-      if (onSubmit) {
-        await onSubmit({ email, password });
-      } else {
-        // Default behavior - call API endpoint
-        const response = await fetch("/api/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        });
-
-        if (!response.ok) {
-          const data = await response.json();
-          throw new Error(data.message || "Błąd podczas logowania");
-        }
-
-        // Redirect to dashboard
-        window.location.href = "/generate";
+      if (!isFormValid) {
+        return;
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Wystąpił nieoczekiwany błąd");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [email, password, isFormValid, onSubmit]);
+
+      setError(null);
+      setIsLoading(true);
+
+      try {
+        if (onSubmit) {
+          await onSubmit({ email, password });
+        } else {
+          // Default behavior - call API endpoint
+          const response = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          });
+
+          if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.message || "Błąd podczas logowania");
+          }
+
+          // Redirect to dashboard
+          window.location.href = "/generate";
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Wystąpił nieoczekiwany błąd");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [email, password, isFormValid, onSubmit]
+  );
 
   const handleBlur = (field: keyof typeof touched) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
@@ -78,11 +78,9 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle className="text-2xl">Zaloguj się</CardTitle>
-        <CardDescription>
-          Wprowadź swoje dane, aby uzyskać dostęp do konta
-        </CardDescription>
+        <CardDescription>Wprowadź swoje dane, aby uzyskać dostęp do konta</CardDescription>
       </CardHeader>
-      
+
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
@@ -93,8 +91,8 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
           )}
 
           <div className="space-y-2">
-            <label 
-              htmlFor="email" 
+            <label
+              htmlFor="email"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               Adres email
@@ -125,16 +123,13 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label 
-                htmlFor="password" 
+              <label
+                htmlFor="password"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 Hasło
               </label>
-              <a 
-                href="/forgot-password" 
-                className="text-sm text-primary hover:underline"
-              >
+              <a href="/forgot-password" className="text-sm text-primary hover:underline">
                 Zapomniałeś hasła?
               </a>
             </div>
@@ -185,10 +180,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
       <CardFooter className="flex-col space-y-2">
         <div className="text-sm text-muted-foreground text-center">
           Nie masz konta?{" "}
-          <a 
-            href="/register" 
-            className="text-primary hover:underline font-medium"
-          >
+          <a href="/register" className="text-primary hover:underline font-medium">
             Zarejestruj się
           </a>
         </div>
@@ -201,4 +193,3 @@ function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
-

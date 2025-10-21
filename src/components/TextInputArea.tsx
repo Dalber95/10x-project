@@ -6,7 +6,7 @@ interface TextInputAreaProps {
   isValidLength: boolean;
 }
 
-export function TextInputArea({ value, onChange, isValidLength }: TextInputAreaProps) {
+export function TextInputArea({ value, onChange }: TextInputAreaProps) {
   const characterCount = value.length;
   const minChars = 100;
   const maxChars = 10000;
@@ -35,7 +35,10 @@ export function TextInputArea({ value, onChange, isValidLength }: TextInputAreaP
 
   return (
     <div className="space-y-2">
-      <label htmlFor="source-text" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+      <label
+        htmlFor="source-text"
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+      >
         Tekst źródłowy
       </label>
       <textarea
@@ -57,4 +60,3 @@ export function TextInputArea({ value, onChange, isValidLength }: TextInputAreaP
     </div>
   );
 }
-

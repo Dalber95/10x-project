@@ -15,9 +15,7 @@ export const generateFlashcardsCommandSchema = z.object({
 /**
  * Type inference from the schema
  */
-export type GenerateFlashcardsCommandSchema = z.infer<
-  typeof generateFlashcardsCommandSchema
->;
+export type GenerateFlashcardsCommandSchema = z.infer<typeof generateFlashcardsCommandSchema>;
 
 /**
  * Validation schema for a single flashcard creation
@@ -25,14 +23,8 @@ export type GenerateFlashcardsCommandSchema = z.infer<
  */
 export const flashcardCreateDtoSchema = z
   .object({
-    front: z
-      .string()
-      .min(1, "Front must not be empty")
-      .max(200, "Front must not exceed 200 characters"),
-    back: z
-      .string()
-      .min(1, "Back must not be empty")
-      .max(500, "Back must not exceed 500 characters"),
+    front: z.string().min(1, "Front must not be empty").max(200, "Front must not exceed 200 characters"),
+    back: z.string().min(1, "Back must not be empty").max(500, "Back must not exceed 500 characters"),
     source: z.enum(["ai-full", "ai-edited", "manual"], {
       errorMap: () => ({
         message: 'Source must be one of: "ai-full", "ai-edited", "manual"',
@@ -53,10 +45,9 @@ export const flashcardCreateDtoSchema = z
       return true;
     },
     {
-      message:
-        'generation_id is required for "ai-full" and "ai-edited" sources, and must be null for "manual" source',
+      message: 'generation_id is required for "ai-full" and "ai-edited" sources, and must be null for "manual" source',
       path: ["generation_id"],
-    },
+    }
   );
 
 /**
@@ -76,16 +67,8 @@ export const flashcardsCreateCommandSchema = z.object({
  */
 export const flashcardUpdateDtoSchema = z
   .object({
-    front: z
-      .string()
-      .min(1, "Front must not be empty")
-      .max(200, "Front must not exceed 200 characters")
-      .optional(),
-    back: z
-      .string()
-      .min(1, "Back must not be empty")
-      .max(500, "Back must not exceed 500 characters")
-      .optional(),
+    front: z.string().min(1, "Front must not be empty").max(200, "Front must not exceed 200 characters").optional(),
+    back: z.string().min(1, "Back must not be empty").max(500, "Back must not exceed 500 characters").optional(),
     source: z
       .enum(["ai-full", "ai-edited", "manual"], {
         errorMap: () => ({
@@ -98,10 +81,7 @@ export const flashcardUpdateDtoSchema = z
   .refine(
     (data) => {
       // If source is being updated to "ai-full" or "ai-edited", generation_id should be provided and not null
-      if (
-        data.source &&
-        (data.source === "ai-full" || data.source === "ai-edited")
-      ) {
+      if (data.source && (data.source === "ai-full" || data.source === "ai-edited")) {
         // If generation_id is explicitly set in the update, it must not be null
         if (data.generation_id !== undefined && data.generation_id === null) {
           return false;
@@ -114,21 +94,14 @@ export const flashcardUpdateDtoSchema = z
       return true;
     },
     {
-      message:
-        'generation_id should be a number for "ai-full" and "ai-edited" sources, and null for "manual" source',
+      message: 'generation_id should be a number for "ai-full" and "ai-edited" sources, and null for "manual" source',
       path: ["generation_id"],
-    },
+    }
   );
 
 /**
  * Type inference from the schemas
  */
-export type FlashcardCreateDtoSchema = z.infer<
-  typeof flashcardCreateDtoSchema
->;
-export type FlashcardsCreateCommandSchema = z.infer<
-  typeof flashcardsCreateCommandSchema
->;
-export type FlashcardUpdateDtoSchema = z.infer<
-  typeof flashcardUpdateDtoSchema
->;
+export type FlashcardCreateDtoSchema = z.infer<typeof flashcardCreateDtoSchema>;
+export type FlashcardsCreateCommandSchema = z.infer<typeof flashcardsCreateCommandSchema>;
+export type FlashcardUpdateDtoSchema = z.infer<typeof flashcardUpdateDtoSchema>;

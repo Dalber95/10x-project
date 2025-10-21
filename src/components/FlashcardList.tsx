@@ -8,17 +8,12 @@ interface FlashcardListProps {
   onReject: (index: number) => void;
 }
 
-export function FlashcardList({
-  flashcards,
-  onAccept,
-  onEdit,
-  onReject,
-}: FlashcardListProps) {
+export function FlashcardList({ flashcards, onAccept, onEdit, onReject }: FlashcardListProps) {
   if (flashcards.length === 0) {
     return (
       <div className="text-center py-12 border-2 border-dashed rounded-lg">
         <p className="text-muted-foreground">
-          Brak wygenerowanych fiszek. Wprowadź tekst i kliknij "Generuj fiszki".
+          Brak wygenerowanych fiszek. Wprowadź tekst i kliknij &quot;Generuj fiszki&quot;.
         </p>
       </div>
     );
@@ -27,9 +22,7 @@ export function FlashcardList({
   return (
     <div className="space-y-4" data-test-id="flashcard-list">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold">
-          Wygenerowane propozycje ({flashcards.length})
-        </h2>
+        <h2 className="text-xl font-semibold">Wygenerowane propozycje ({flashcards.length})</h2>
         <p className="text-sm text-muted-foreground">
           Zaakceptowano: {flashcards.filter((f) => f.accepted).length} / {flashcards.length}
         </p>
@@ -50,4 +43,3 @@ export function FlashcardList({
     </div>
   );
 }
-

@@ -20,7 +20,7 @@ export function LogoutButton() {
       }
 
       toast.success("Wylogowano pomyślnie");
-      
+
       // Przekieruj do strony logowania
       window.location.href = "/login";
     } catch (error) {
@@ -31,13 +31,7 @@ export function LogoutButton() {
   };
 
   return (
-    <Button
-      variant="outline"
-      size="sm"
-      onClick={handleLogout}
-      disabled={isLoading}
-      aria-busy={isLoading}
-    >
+    <Button variant="outline" size="sm" onClick={handleLogout} disabled={isLoading} aria-busy={isLoading}>
       {isLoading ? (
         <>
           <Loader2 className="animate-spin" />
@@ -52,4 +46,3 @@ export function LogoutButton() {
     </Button>
   );
 }
-

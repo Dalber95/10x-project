@@ -13,25 +13,11 @@ export function SavedFlashcardsList() {
   const [updatingId, setUpdatingId] = useState<number | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
 
-  const {
-    flashcards,
-    pagination,
-    isLoading,
-    error: fetchError,
-    refetch,
-  } = useFlashcards(currentPage, 20, true);
+  const { flashcards, pagination, isLoading, error: fetchError, refetch } = useFlashcards(currentPage, 20, true);
 
-  const {
-    updateFlashcard,
-    error: updateError,
-    clearError: clearUpdateError,
-  } = useUpdateFlashcard();
+  const { updateFlashcard, error: updateError, clearError: clearUpdateError } = useUpdateFlashcard();
 
-  const {
-    deleteFlashcard,
-    error: deleteError,
-    clearError: clearDeleteError,
-  } = useDeleteFlashcard();
+  const { deleteFlashcard, error: deleteError, clearError: clearDeleteError } = useDeleteFlashcard();
 
   const handleUpdate = useCallback(
     async (id: number, front: string, back: string) => {
@@ -49,7 +35,7 @@ export function SavedFlashcardsList() {
 
       setUpdatingId(null);
     },
-    [updateFlashcard, updateError, clearUpdateError, refetch, currentPage],
+    [updateFlashcard, updateError, clearUpdateError, refetch, currentPage]
   );
 
   const handleDelete = useCallback(
@@ -68,7 +54,7 @@ export function SavedFlashcardsList() {
 
       setDeletingId(null);
     },
-    [deleteFlashcard, deleteError, clearDeleteError, refetch, currentPage],
+    [deleteFlashcard, deleteError, clearDeleteError, refetch, currentPage]
   );
 
   const handlePreviousPage = async () => {
@@ -99,18 +85,10 @@ export function SavedFlashcardsList() {
 
   if (fetchError) {
     return (
-      <div
-        className="rounded-lg border border-destructive bg-destructive/10 p-4 text-sm text-destructive"
-        role="alert"
-      >
+      <div className="rounded-lg border border-destructive bg-destructive/10 p-4 text-sm text-destructive" role="alert">
         <p className="font-medium">Wystąpił błąd podczas ładowania fiszek</p>
         <p className="mt-1">{fetchError}</p>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => refetch(currentPage, 20)}
-          className="mt-3"
-        >
+        <Button variant="outline" size="sm" onClick={() => refetch(currentPage, 20)} className="mt-3">
           Spróbuj ponownie
         </Button>
       </div>
@@ -120,9 +98,7 @@ export function SavedFlashcardsList() {
   if (flashcards.length === 0) {
     return (
       <div className="rounded-lg border border-dashed p-8 text-center">
-        <p className="text-muted-foreground">
-          Nie masz jeszcze żadnych zapisanych fiszek.
-        </p>
+        <p className="text-muted-foreground">Nie masz jeszcze żadnych zapisanych fiszek.</p>
         <p className="mt-2 text-sm text-muted-foreground">
           Przejdź do{" "}
           <a href="/generate" className="underline hover:text-foreground">
@@ -134,12 +110,8 @@ export function SavedFlashcardsList() {
     );
   }
 
-  const totalPages = pagination
-    ? Math.ceil(pagination.total / pagination.limit)
-    : 1;
-  const hasNextPage = pagination
-    ? currentPage * pagination.limit < pagination.total
-    : false;
+  const totalPages = pagination ? Math.ceil(pagination.total / pagination.limit) : 1;
+  const hasNextPage = pagination ? currentPage * pagination.limit < pagination.total : false;
   const hasPreviousPage = currentPage > 1;
 
   return (
@@ -207,4 +179,3 @@ export function SavedFlashcardsList() {
     </div>
   );
 }
-

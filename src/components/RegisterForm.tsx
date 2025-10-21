@@ -23,61 +23,60 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
   });
 
   // Validation logic
-  const emailError = touched.email && email.length > 0 && !isValidEmail(email)
-    ? "Nieprawidłowy format adresu email"
-    : null;
+  const emailError =
+    touched.email && email.length > 0 && !isValidEmail(email) ? "Nieprawidłowy format adresu email" : null;
 
-  const passwordError = touched.password && password.length > 0 && password.length < 8
-    ? "Hasło musi mieć co najmniej 8 znaków"
-    : null;
+  const passwordError =
+    touched.password && password.length > 0 && password.length < 8 ? "Hasło musi mieć co najmniej 8 znaków" : null;
 
-  const confirmPasswordError = touched.confirmPassword && confirmPassword.length > 0 && password !== confirmPassword
-    ? "Hasła nie są zgodne"
-    : null;
+  const confirmPasswordError =
+    touched.confirmPassword && confirmPassword.length > 0 && password !== confirmPassword
+      ? "Hasła nie są zgodne"
+      : null;
 
-  const isFormValid = 
-    isValidEmail(email) && 
-    password.length >= 8 && 
-    password === confirmPassword;
+  const isFormValid = isValidEmail(email) && password.length >= 8 && password === confirmPassword;
 
-  const handleSubmit = useCallback(async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Mark all fields as touched
-    setTouched({ email: true, password: true, confirmPassword: true });
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-    if (!isFormValid) {
-      return;
-    }
+      // Mark all fields as touched
+      setTouched({ email: true, password: true, confirmPassword: true });
 
-    setError(null);
-    setIsLoading(true);
-
-    try {
-      if (onSubmit) {
-        await onSubmit({ email, password });
-      } else {
-        // Default behavior - call API endpoint
-        const response = await fetch("/api/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        });
-
-        if (!response.ok) {
-          const data = await response.json();
-          throw new Error(data.message || "Błąd podczas rejestracji");
-        }
-
-        // Redirect to dashboard or show success message
-        window.location.href = "/generate";
+      if (!isFormValid) {
+        return;
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Wystąpił nieoczekiwany błąd");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [email, password, confirmPassword, isFormValid, onSubmit]);
+
+      setError(null);
+      setIsLoading(true);
+
+      try {
+        if (onSubmit) {
+          await onSubmit({ email, password });
+        } else {
+          // Default behavior - call API endpoint
+          const response = await fetch("/api/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+          });
+
+          if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.message || "Błąd podczas rejestracji");
+          }
+
+          // Redirect to dashboard or show success message
+          window.location.href = "/generate";
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Wystąpił nieoczekiwany błąd");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [email, password, confirmPassword, isFormValid, onSubmit]
+  );
 
   const handleBlur = (field: keyof typeof touched) => {
     setTouched((prev) => ({ ...prev, [field]: true }));
@@ -87,11 +86,9 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
         <CardTitle className="text-2xl">Utwórz konto</CardTitle>
-        <CardDescription>
-          Wprowadź swoje dane, aby założyć nowe konto
-        </CardDescription>
+        <CardDescription>Wprowadź swoje dane, aby założyć nowe konto</CardDescription>
       </CardHeader>
-      
+
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
@@ -102,8 +99,8 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
           )}
 
           <div className="space-y-2">
-            <label 
-              htmlFor="email" 
+            <label
+              htmlFor="email"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               Adres email
@@ -132,8 +129,8 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
           </div>
 
           <div className="space-y-2">
-            <label 
-              htmlFor="password" 
+            <label
+              htmlFor="password"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               Hasło
@@ -166,8 +163,8 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
           </div>
 
           <div className="space-y-2">
-            <label 
-              htmlFor="confirm-password" 
+            <label
+              htmlFor="confirm-password"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               Potwierdź hasło
@@ -201,13 +198,7 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
             )}
           </div>
 
-          <Button
-            type="submit"
-            className="w-full"
-            size="lg"
-            disabled={isLoading || !isFormValid}
-            aria-busy={isLoading}
-          >
+          <Button type="submit" className="w-full" size="lg" disabled={isLoading || !isFormValid} aria-busy={isLoading}>
             {isLoading ? (
               <>
                 <Loader2 className="animate-spin" />
@@ -223,10 +214,7 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
       <CardFooter className="flex-col space-y-2">
         <div className="text-sm text-muted-foreground text-center">
           Masz już konto?{" "}
-          <a 
-            href="/login" 
-            className="text-primary hover:underline font-medium"
-          >
+          <a href="/login" className="text-primary hover:underline font-medium">
             Zaloguj się
           </a>
         </div>
@@ -239,4 +227,3 @@ function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 }
-

@@ -19,7 +19,7 @@ export default function FlashcardGenerationView() {
   const handleGenerate = useCallback(async () => {
     clearError();
     const result = await generateFlashcards(textValue);
-    
+
     if (result) {
       setGenerationId(result.generation_id);
       const proposals: FlashcardProposalViewModel[] = result.flashcards_proposals.map((proposal) => ({
@@ -34,18 +34,12 @@ export default function FlashcardGenerationView() {
   }, [clearError, generateFlashcards, textValue]);
 
   const handleAccept = useCallback((index: number) => {
-    setFlashcards((prev) =>
-      prev.map((card, i) => (i === index ? { ...card, accepted: !card.accepted } : card))
-    );
+    setFlashcards((prev) => prev.map((card, i) => (i === index ? { ...card, accepted: !card.accepted } : card)));
   }, []);
 
   const handleEdit = useCallback((index: number, front: string, back: string) => {
     setFlashcards((prev) =>
-      prev.map((card, i) =>
-        i === index
-          ? { ...card, front, back, source: "ai-edited" as const, edited: true }
-          : card
-      )
+      prev.map((card, i) => (i === index ? { ...card, front, back, source: "ai-edited" as const, edited: true } : card))
     );
   }, []);
 
@@ -59,10 +53,7 @@ export default function FlashcardGenerationView() {
     setGenerationId(null);
   }, []);
 
-  const isValidTextLength = useMemo(
-    () => textValue.length >= 100 && textValue.length <= 10000,
-    [textValue.length]
-  );
+  const isValidTextLength = useMemo(() => textValue.length >= 100 && textValue.length <= 10000, [textValue.length]);
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -79,17 +70,9 @@ export default function FlashcardGenerationView() {
       {error && <ErrorNotification message={error} onClose={clearError} />}
 
       <div className="space-y-6">
-        <TextInputArea
-          value={textValue}
-          onChange={setTextValue}
-          isValidLength={isValidTextLength}
-        />
+        <TextInputArea value={textValue} onChange={setTextValue} isValidLength={isValidTextLength} />
 
-        <GenerateButton
-          onClick={handleGenerate}
-          disabled={!isValidTextLength || isLoading}
-          isLoading={isLoading}
-        />
+        <GenerateButton onClick={handleGenerate} disabled={!isValidTextLength || isLoading} isLoading={isLoading} />
 
         {isLoading && <SkeletonLoader />}
 
@@ -102,15 +85,10 @@ export default function FlashcardGenerationView() {
               onReject={handleReject}
             />
 
-            <BulkSaveButton
-              flashcards={flashcards}
-              generationId={generationId}
-              onSaveSuccess={handleSaveSuccess}
-            />
+            <BulkSaveButton flashcards={flashcards} generationId={generationId} onSaveSuccess={handleSaveSuccess} />
           </>
         )}
       </div>
     </div>
   );
 }
-

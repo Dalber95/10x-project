@@ -1,6 +1,6 @@
 ---
 // Strona główna - sprawdź czy użytkownik jest zalogowany
-const accessToken = Astro.cookies.get('sb-access-token');
+const accessToken = Astro.cookies.get("sb-access-token");
 const isAuthenticated = !!accessToken?.value;
 
 if (isAuthenticated) {

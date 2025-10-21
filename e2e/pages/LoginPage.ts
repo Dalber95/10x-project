@@ -1,4 +1,4 @@
-import { Page, Locator, expect } from '@playwright/test';
+import { Page, Locator } from "@playwright/test";
 
 /**
  * Page Object Model for the Login Page
@@ -17,22 +17,22 @@ export class LoginPage {
   constructor(page: Page) {
     this.page = page;
     // Using accessible selectors - more reliable with Astro + React hydration
-    this.emailInput = page.getByRole('textbox', { name: /adres email/i });
-    this.passwordInput = page.getByRole('textbox', { name: /hasło/i }); // Playwright sees password as textbox with label
-    this.submitButton = page.getByRole('button', { name: /zaloguj się/i });
+    this.emailInput = page.getByRole("textbox", { name: /adres email/i });
+    this.passwordInput = page.getByRole("textbox", { name: /hasło/i }); // Playwright sees password as textbox with label
+    this.submitButton = page.getByRole("button", { name: /zaloguj się/i });
     // Navigation links
-    this.registerLink = page.getByRole('link', { name: /zarejestruj/i });
-    this.forgotPasswordLink = page.getByRole('link', { name: /zapomniałeś hasła/i });
-    this.errorAlert = page.getByRole('alert');
+    this.registerLink = page.getByRole("link", { name: /zarejestruj/i });
+    this.forgotPasswordLink = page.getByRole("link", { name: /zapomniałeś hasła/i });
+    this.errorAlert = page.getByRole("alert");
   }
 
   /**
    * Navigate to login page
    */
   async goto() {
-    await this.page.goto('/login');
+    await this.page.goto("/login");
     // Wait for form to be ready
-    await this.emailInput.waitFor({ state: 'visible' });
+    await this.emailInput.waitFor({ state: "visible" });
   }
 
   /**
@@ -108,14 +108,13 @@ export class LoginPage {
    * Get error message text
    */
   async getErrorMessage(): Promise<string> {
-    return await this.errorAlert.textContent() || '';
+    return (await this.errorAlert.textContent()) || "";
   }
 
   /**
    * Wait for successful login (redirect to /generate)
    */
   async waitForSuccessfulLogin() {
-    await this.page.waitForURL('/generate');
+    await this.page.waitForURL("/generate");
   }
 }
-

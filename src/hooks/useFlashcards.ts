@@ -14,11 +14,7 @@ interface UseFlashcardsReturn {
   clearError: () => void;
 }
 
-export function useFlashcards(
-  initialPage: number = 1,
-  initialLimit: number = 20,
-  autoFetch: boolean = true,
-): UseFlashcardsReturn {
+export function useFlashcards(initialPage = 1, initialLimit = 20, autoFetch = true): UseFlashcardsReturn {
   const [flashcards, setFlashcards] = useState<FlashcardDto[]>([]);
   const [pagination, setPagination] = useState<{
     page: number;
@@ -53,16 +49,11 @@ export function useFlashcards(
           }
 
           if (response.status === 400) {
-            throw new Error(
-              errorData.message || "Nieprawidłowe parametry zapytania",
-            );
+            throw new Error(errorData.message || "Nieprawidłowe parametry zapytania");
           }
 
           if (response.status === 500) {
-            throw new Error(
-              errorData.message ||
-                "Wystąpił błąd podczas pobierania fiszek. Spróbuj ponownie.",
-            );
+            throw new Error(errorData.message || "Wystąpił błąd podczas pobierania fiszek. Spróbuj ponownie.");
           }
 
           throw new Error("Wystąpił nieoczekiwany błąd");
@@ -72,8 +63,7 @@ export function useFlashcards(
         setFlashcards(data.data);
         setPagination(data.pagination);
       } catch (err) {
-        const errorMessage =
-          err instanceof Error ? err.message : "Wystąpił nieznany błąd";
+        const errorMessage = err instanceof Error ? err.message : "Wystąpił nieznany błąd";
         setError(errorMessage);
         setFlashcards([]);
         setPagination(null);
@@ -81,7 +71,7 @@ export function useFlashcards(
         setIsLoading(false);
       }
     },
-    [initialPage, initialLimit],
+    [initialPage, initialLimit]
   );
 
   useEffect(() => {
@@ -103,4 +93,3 @@ export function useFlashcards(
     clearError,
   };
 }
-
