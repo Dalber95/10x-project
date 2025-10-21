@@ -60,6 +60,7 @@ jobs:
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       TEST_USER_EMAIL: ${{ secrets.E2E_USERNAME }}
       TEST_USER_PASSWORD: ${{ secrets.E2E_PASSWORD }}
       TEST_USER_ID: ${{ secrets.E2E_USERNAME_ID }}

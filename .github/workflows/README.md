@@ -21,11 +21,12 @@ Aby workflow działał poprawnie, należy skonfigurować następujące sekrety w
 **Wymagane:**
 - `SUPABASE_URL` - URL do instancji Supabase
 - `SUPABASE_KEY` - Klucz anon do Supabase
-- `TEST_USER_EMAIL` - Email użytkownika testowego
-- `TEST_USER_PASSWORD` - Hasło użytkownika testowego
+- `OPENROUTER_API_KEY` - Klucz API do OpenRouter (wymagany dla testów generowania fiszek)
+- `E2E_USERNAME` - Email użytkownika testowego (mapowany na TEST_USER_EMAIL)
+- `E2E_PASSWORD` - Hasło użytkownika testowego (mapowany na TEST_USER_PASSWORD)
 
 **Opcjonalne:**
-- `TEST_USER_ID` - ID użytkownika testowego (używane w cleanup)
+- `E2E_USERNAME_ID` - ID użytkownika testowego (mapowany na TEST_USER_ID, używane w cleanup)
 
 **Uwaga:** `BASE_URL` nie jest potrzebny - Playwright automatycznie uruchamia lokalny serwer dev na `localhost:3000`.
 
