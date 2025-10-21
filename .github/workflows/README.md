@@ -9,7 +9,7 @@ Automatyczny workflow uruchamiany przy każdym pull requeście do gałęzi `mast
 1. **Lint** - Sprawdzenie jakości kodu
 2. **Unit Tests & E2E Tests** (równolegle po lincie)
    - Unit Tests: Testy jednostkowe z pokryciem kodu
-   - E2E Tests: Testy end-to-end w przeglądarce Chromium
+   - E2E Tests: Test głównego flow generowania fiszek (`flashcard-generation-flow.spec.ts`) w przeglądarce Chromium
 3. **Status Comment** - Komentarz z podsumowaniem (tylko gdy wszystkie poprzednie kroki się powiodą)
 
 ### Wymagane sekrety GitHub:

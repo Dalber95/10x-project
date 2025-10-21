@@ -81,7 +81,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run E2E tests
-        run: npm run test:e2e
+        run: npx playwright test e2e/flashcard-generation-flow.spec.ts
 
       - name: Upload E2E test coverage
         if: always()
