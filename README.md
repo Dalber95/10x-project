@@ -1,4 +1,4 @@
-# 10x Cards
+# 10x Cards.pl
 
 The 10x-cards project aims to enable users to quickly create and manage sets of educational flashcards. The application uses LLM models (via API) to generate flashcard suggestions based on the provided text, solving the problem of manual, time-consuming flashcard creation.
 
